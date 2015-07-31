@@ -1,0 +1,193 @@
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Test auth0-metrics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="//localhost:35729/livereload.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.auth0.com/styleguide/latest/index.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/index.css"/>
+
+  </head>
+  <!--[if IE 9]>
+    <style>.sidebar-box ul a i{display: none}</style>
+  <![endif]-->
+  <body>
+    <header class="site-header clearfix">
+      <nav role="navigation" class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <h1 class="navbar-brand">
+              <a href="/">
+                <img src="//styleguide.auth0.com/img/auth0_logo.png"/>
+              </a>
+            </h1>
+          </div>
+        </div>
+      </nav>
+
+
+    </header>
+
+    <div class="container">
+      <div class="sub-header sub-header-dropdown">
+        <span class="sub-header-text">Auth0Metrics demo page</span>
+
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="sidebar-box">
+            <strong>Basic demos</strong>
+            <ul>
+              <li><a id="pageview-button"><i></i>Pageview</a></li>
+              <li><a id="track-button"><i></i>Track event</a></li>
+              <li><a id="identify1-button"><i></i>Identify user 1</a></li>
+              <li><a id="identify2-button"><i></i>Identify user 2</a></li>
+              <li><a id="abtest-button"><i></i>A/B test</a></li>
+              <li><a id="alias1-button"><i></i>Alias user 1</a></li>
+              <li><a id="alias2-button"><i></i>Alias user 2</a></li>
+              <li><a id="break-segment-button"><i></i>Break segment</a></li>
+              <li><a id="clear-button"><i></i>Clear cookies/localStorage</a></li>
+            </ul>
+            <hr />
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="text-content">
+            <h1>Metrics</h1>
+
+            <h4>This page is used to test auth0-metrics</h4>
+
+            <div class="clearfix">
+              <div id="login-container1" style="float: left; width: 300px; height: 500px; margin-top: 20px;"></div>
+              <div id="login-container2" style="float: left; width: 300px; height: 500px; margin-top: 20px;"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/auth0-metrics.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+    <script>
+
+      $(function() {
+          var segmentKey = "WqErZyd56ob3pmMDnko55hNgFt8B4Zox";
+          var dwhEndpoint = "http://localhost:4101/dwh-metrics";
+          var metrics = new Auth0Metrics(segmentKey, dwhEndpoint, 'test');
+
+          metrics.ready(function(){
+            console.log("LOADED!");
+          });
+
+          $('#pageview-button').on('click', function() {
+            metrics.page();
+          });
+
+          $('#track-button').on('click', function() {
+            metrics.track('success:test', {"testing": true, test: [1,2,3,4]}, function(){console.log('Track callback');});
+          });
+
+          $('#identify1-button').on('click', function() {
+            metrics.identify("1", {
+              name: "user1",
+              nickname: '',
+              created_at: '',
+              email: 'user1@auth0.com',
+              email_verified: true,
+              loginsCount: 4,
+              tenant: 'usertenant1',
+              tenants: 'usertenant1'
+            });
+          });
+
+          $('#identify2-button').on('click', function() {
+            metrics.identify("2", {
+              name: "user2",
+              nickname: '',
+              created_at: '',
+              email: 'user2@auth0.com',
+              email_verified: true,
+              loginsCount: 4,
+              tenant: 'usertenant2',
+              tenants: 'usertenant2'
+            });
+          });
+
+          $('#abtest-button').on('click', function() {
+            metrics.identify({
+              'ab:website-pricing-packages': "original"
+            });
+          });
+
+          $('#alias1-button').on('click', function() {
+              metrics.alias('1');
+          });
+
+          $('#alias2-button').on('click', function() {
+              metrics.alias('2');
+          });
+
+          $('#break-segment-button').on('click', function() {
+            var analytics = [];
+
+            analytics.invoked = true;
+
+            // A list of the methods in Analytics.js to stub.
+            analytics.methods = [
+              'trackSubmit',
+              'trackClick',
+              'trackLink',
+              'trackForm',
+              'pageview',
+              'identify',
+              'group',
+              'track',
+              'ready',
+              'alias',
+              'page',
+              'once',
+              'off',
+              'on'
+            ];
+
+            analytics.factory = function(method){
+              return function(){
+                var args = Array.prototype.slice.call(arguments);
+                args.unshift(method);
+                analytics.push(args);
+                return analytics;
+              };
+            };
+
+            for (var i = 0; i < analytics.methods.length; i++) {
+              var key = analytics.methods[i];
+              analytics[key] = analytics.factory(key);
+            }
+
+            metrics._analytics = analytics;
+          });
+
+
+          $('#clear-button').on('click', function() {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+              var cookie = cookies[i];
+              var eqPos = cookie.indexOf("=");
+              var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+              document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+
+            localStorage.clear();
+          });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "name": "auth0-metrics",
+  "version": "1.0.0",
+  "description": "Auth0 Metrics",
+  "main": "./index.js",
+  "keywords": [
+    "auth0",
+    "analytics"
+  ],
+  "scripts": {
+    "test": "grunt integration",
+    "demo": "grunt demo",
+    "dev": "grunt dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/auth0/auth0-metrics"
+  },
+  "author": "Auth0 <support@auth0.com> (http://auth0.com)",
+  "license": "Propietary",
+  "dependencies": {
+    "debug": "^2.1.2"
+  },
+  "devDependencies": {
+    "brfs": "0.0.8",
+    "browserify": "^8.1.1",
+    "bump": "git://github.com/ianstormtaylor/bump",
+    "component-cookie": "^1.1.2",
+    "component-url": "^0.2.1",
+    "css-prefix": "0.0.2",
+    "ejsify": "0.1.0",
+    "expect.js": "~0.2.0",
+    "grunt": "^0.4.5",
+    "grunt-autoprefixer": "~0.4.0",
+    "grunt-aws-s3": "~0.9.3",
+    "grunt-browserify": "~3.3.0",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-less": "~0.8.1",
+    "grunt-contrib-outdated": "~0.0.1",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-exec": "~0.4.2",
+    "grunt-fastly": "~0.1.3",
+    "grunt-http": "^1.5.0",
+    "jquery": "^2.1.3",
+    "mocha": "1.20.1",
+    "mold-source-map": "^0.3.0",
+    "packageify": "^0.2.0",
+    "phantomjs": "^1.9.7-15",
+    "rimraf": "~2.2.2",
+    "stluafed": "^1.0.0",
+    "store": "^1.3.17",
+    "through": "^2.3.4",
+    "uglify-js": "~2.4.15",
+    "unreleased": "^0.0.5",
+    "uuid": "^2.0.1",
+    "zuul": "https://github.com/jfromaniello/zuul/tarball/phantom_custom_port",
+    "zuul-ngrok": "^2.0.1"
+  },
+  "browserify": {
+    "transform": [
+      "ejsify",
+      "brfs",
+      "packageify"
+    ]
+  }
+}
