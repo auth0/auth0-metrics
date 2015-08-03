@@ -34,16 +34,6 @@ module.exports = function (grunt) {
           base: ['support/development-demo', 'support/development-demo/build', 'build'],
           port: 3000
         }
-      },
-      'demo-https': {
-        options: {
-          base: ['support/development-demo', 'support/development-demo/build', 'build'],
-          port:  3000,
-          protocol: 'https',
-          hostname: '*',
-          cert: fs.readFileSync(__dirname + '/test/support/https-certs/server.crt').toString(),
-          key:  fs.readFileSync(__dirname + '/test/support/https-certs/server.key').toString()
-        }
       }
     },
     browserify: {
@@ -245,7 +235,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build',         ['js']);
 
   grunt.registerTask('demo',          ['less:demo', 'connect:demo', 'build', 'watch']);
-  grunt.registerTask('demo-https',    ['less:demo', 'connect:demo-https', 'build', 'watch']);
 
   grunt.registerTask('dev',           ['connect:test', 'build', 'watch']);
   grunt.registerTask('integration',   ['exec:test-inception', 'exec:test-integration']);
