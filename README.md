@@ -1,1 +1,3 @@
-[![Auth0](https://cldup.com/yYelLVuXby.jpg)](http://auth0.com)
+# Auth0 Metrics
+
+This library provides a module to track all frontend usage
