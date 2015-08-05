@@ -141,12 +141,12 @@ module.exports = function (grunt) {
       },
       clean: {
         files: [
-          { action: 'delete', dest: 'js/lock-' + pkg.version + '.js' },
-          { action: 'delete', dest: 'js/lock-' + pkg.version + '.min.js' },
-          { action: 'delete', dest: 'js/lock-' + major_version + '.js' },
-          { action: 'delete', dest: 'js/lock-' + major_version + '.min.js' },
-          { action: 'delete', dest: 'js/lock-' + minor_version + '.js' },
-          { action: 'delete', dest: 'js/lock-' + minor_version + '.min.js' }
+          { action: 'delete', dest: 'js/metrics-' + pkg.version + '.js' },
+          { action: 'delete', dest: 'js/metrics-' + pkg.version + '.min.js' },
+          { action: 'delete', dest: 'js/metrics-' + major_version + '.js' },
+          { action: 'delete', dest: 'js/metrics-' + major_version + '.min.js' },
+          { action: 'delete', dest: 'js/metrics-' + minor_version + '.js' },
+          { action: 'delete', dest: 'js/metrics-' + minor_version + '.min.js' }
         ]
       },
       publish: {
@@ -175,12 +175,12 @@ module.exports = function (grunt) {
       purge: {
         options: {
           urls: [
-            'js/lock-' + pkg.version + '.js',
-            'js/lock-' + pkg.version + '.min.js',
-            'js/lock-' + major_version + '.js',
-            'js/lock-' + major_version + '.min.js',
-            'js/lock-' + minor_version + '.js',
-            'js/lock-' + minor_version + '.min.js',
+            'js/metrics-' + pkg.version + '.js',
+            'js/metrics-' + pkg.version + '.min.js',
+            'js/metrics-' + major_version + '.js',
+            'js/metrics-' + major_version + '.min.js',
+            'js/metrics-' + minor_version + '.js',
+            'js/metrics-' + minor_version + '.min.js',
           ]
         },
       },
@@ -188,37 +188,37 @@ module.exports = function (grunt) {
     http: {
       purge_js: {
         options: {
-          url: process.env.CDN_ROOT + '/js/lock-' + pkg.version + '.js',
+          url: process.env.CDN_ROOT + '/js/metrics-' + pkg.version + '.js',
           method: 'DELETE'
         }
       },
       purge_js_min: {
         options: {
-          url: process.env.CDN_ROOT + '/js/lock-' + pkg.version + '.min.js',
+          url: process.env.CDN_ROOT + '/js/metrics-' + pkg.version + '.min.js',
           method: 'DELETE'
         }
       },
       purge_major_js: {
         options: {
-          url: process.env.CDN_ROOT + '/js/lock-' + major_version + '.js',
+          url: process.env.CDN_ROOT + '/js/metrics-' + major_version + '.js',
           method: 'DELETE'
         }
       },
       purge_major_js_min: {
         options: {
-          url: process.env.CDN_ROOT + '/js/lock-' + major_version + '.min.js',
+          url: process.env.CDN_ROOT + '/js/metrics-' + major_version + '.min.js',
           method: 'DELETE'
         }
       },
       purge_minor_js: {
         options: {
-          url: process.env.CDN_ROOT + '/js/lock-' + minor_version + '.js',
+          url: process.env.CDN_ROOT + '/js/metrics-' + minor_version + '.js',
           method: 'DELETE'
         }
       },
       purge_minor_js_min: {
         options: {
-          url: process.env.CDN_ROOT + '/js/lock-' + minor_version + '.min.js',
+          url: process.env.CDN_ROOT + '/js/metrics-' + minor_version + '.min.js',
           method: 'DELETE'
         }
       }
