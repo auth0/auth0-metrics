@@ -19,15 +19,19 @@
   "author": "Auth0 <support@auth0.com> (http://auth0.com)",
   "license": "Propietary",
   "dependencies": {
-    "debug": "^2.1.2"
+    "debug": "^2.1.2",
+    "component-cookie": "^1.1.2",
+    "component-url": "^0.2.1",
+    "lodash": "^3.10.0",
+    "superagent": "^1.2.0",
+    "stluafed": "^1.0.0",
+    "uuid": "^2.0.1",
+    "store": "^1.3.17"
   },
   "devDependencies": {
     "brfs": "0.0.8",
     "browserify": "^8.1.1",
     "bump": "git://github.com/ianstormtaylor/bump",
-    "component-cookie": "^1.1.2",
-    "component-url": "^0.2.1",
-    "css-prefix": "0.0.2",
     "ejsify": "0.1.0",
     "expect.js": "~0.2.0",
     "grunt": "^0.4.5",
@@ -52,12 +56,9 @@
     "packageify": "^0.2.0",
     "phantomjs": "^1.9.7-15",
     "rimraf": "~2.2.2",
-    "stluafed": "^1.0.0",
-    "store": "^1.3.17",
     "through": "^2.3.4",
     "uglify-js": "~2.4.15",
     "unreleased": "^0.0.5",
-    "uuid": "^2.0.1",
     "zuul": "https://github.com/jfromaniello/zuul/tarball/phantom_custom_port",
     "zuul-ngrok": "^2.0.1"
   },

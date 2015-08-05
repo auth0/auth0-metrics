@@ -4,7 +4,7 @@
  */
 
 var debug = require('debug')('auth0-metrics');
-var _ = require('underscore');
+var _ = require('lodash');
 
 /**
  * Expose `Auth0Metrics` constructor
@@ -41,77 +41,10 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
 
   this.dwh = require('./lib/dwh')(dwhEndpoint, label);
 
-  debug("Start loading segment...");
+  debug("Loading segment...");
 
-  var analytics = this._analytics = [];
+  this._segment = require('./lib/boot-segment')(segmentKey);
 
-  if (analytics.invoked) {
-    if (window.console && console.error) {
-      console.error('Segment snippet included twice.');
-    }
-    return;
-  }
-
-  analytics.invoked = true;
-
-  // A list of the methods in Analytics.js to stub.
-  analytics.methods = [
-    'trackSubmit',
-    'trackClick',
-    'trackLink',
-    'trackForm',
-    'pageview',
-    'identify',
-    'group',
-    'track',
-    'ready',
-    'alias',
-    'page',
-    'once',
-    'off',
-    'on'
-  ];
-
-  analytics.factory = function(method){
-    return function(){
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift(method);
-      analytics.push(args);
-      return analytics;
-    };
-  };
-
-  for (var i = 0; i < analytics.methods.length; i++) {
-    var key = analytics.methods[i];
-    analytics[key] = analytics.factory(key);
-  }
-
-  analytics.load = function(key){
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = ('https:' === document.location.protocol
-      ? 'https://' : 'http://')
-      + 'cdn.segment.com/analytics.js/v1/'
-      + key + '/analytics.min.js';
-    script.onerror = function(){
-      debug("Segment load failed");
-    }
-
-    script.onload = function(){
-      debug("Finished loading segment");
-      // Grab analytics and make it private
-      analytics = window.analytics;
-      delete window.analytics;
-    }
-
-    var first = document.getElementsByTagName('script')[0];
-    first.parentNode.insertBefore(script, first);
-  };
-
-  analytics.SNIPPET_VERSION = '3.0.1';
-
-  analytics.load(segmentKey);
 
 }
 
@@ -121,20 +54,20 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
 
 Auth0Metrics.version = require('package.version');
 
-Auth0Metrics.prototype.analytics = function() {
-    return this._analytics;
+Auth0Metrics.prototype.segment = function() {
+    return this._segment;
 }
 
 Auth0Metrics.prototype.track = function(name, data, cb) {
-  var analytics = this.analytics();
+  var segment = this.segment();
 
-  if (!analytics) {
+  if (!segment) {
     debug('track call without segment');
   }
 
   //Segment
   try {
-    analytics.track.call(analytics, name, $.extend({}, this.getData(), data || {}), null);
+    segment.track.call(segment, name, _.assign({}, this.getData(), data || {}), null);
   } catch (error) {
     debug('segment analytics error: %o', error);
   }
@@ -162,24 +95,24 @@ Auth0Metrics.prototype.track = function(name, data, cb) {
  */
 
 Auth0Metrics.prototype.setUserId = function(uid, override) {
-  var analytics = this.analytics();
-  if (!analytics) return;
+  var segment = this.segment();
+  if (!segment) return;
 
   try {
-    var aid = analytics.user().anonymousId();
-    analytics.user().id(uid);
-    analytics.user().anonymousId(aid);
+    var aid = segment.user().anonymousId();
+    segment.user().id(uid);
+    segment.user().anonymousId(aid);
   } catch (error) {
-    console.error('analytics error: %o', error);
+    console.error('segment error: %o', error);
   }
 }
 
 
 Auth0Metrics.prototype.identify = function (id, traits) {
-  var analytics = this.analytics();
+  var segment = this.segment();
 
-  if (!analytics) {
-    debug('identify call without analytics');
+  if (!segment) {
+    debug('identify call without segment');
   }
 
   if(typeof id !== 'string'){
@@ -189,7 +122,7 @@ Auth0Metrics.prototype.identify = function (id, traits) {
 
 
   try {
-    analytics.identify(id, traits);
+    segment.identify(id, traits);
   } catch (error) {
     debug('segment analytics error: %o', error);
   }
@@ -202,16 +135,16 @@ Auth0Metrics.prototype.identify = function (id, traits) {
 }
 
 Auth0Metrics.prototype.alias = function (userId) {
-  var analytics = this.analytics();
+  var segment = this.segment();
 
-  if (!analytics) {
-    debug('alias call without analytics');
+  if (!segment) {
+    debug('alias call without segment');
 
   }
 
   //Segment
   try {
-    analytics.alias.apply(analytics, arguments);
+    segment.alias.apply(segment, arguments);
   } catch (error) {
     debug('segment analytics error: %o', error);
   }
@@ -225,15 +158,15 @@ Auth0Metrics.prototype.alias = function (userId) {
 }
 
 Auth0Metrics.prototype.page = function () {
-  var analytics = this.analytics();
+  var segment = this.segment();
 
-  if (!analytics) {
+  if (!segment) {
     debug('track call without segment');
   }
 
   //Segment
   try {
-    analytics.page.apply(analytics, arguments);
+    segment.page.apply(segment, arguments);
   } catch (error) {
     debug('segment analytics error: %o', error);
   }
@@ -244,6 +177,10 @@ Auth0Metrics.prototype.page = function () {
   } catch (error) {
     debug('dwh analytics error: %o', error);
   }
+}
+
+Auth0Metrics.prototype.traits = function() {
+  return this.dwh.traits();
 }
 
 Auth0Metrics.prototype.getData = function() {
@@ -258,12 +195,12 @@ Auth0Metrics.prototype.getData = function() {
 }
 
 Auth0Metrics.prototype.ready = function (cb) {
-  var analytics = this.analytics();
-  if (!analytics) { return cb(new Error('no segment integration on page')) }
+  var segment = this.segment();
+  if (!segment) { return cb(new Error('no segment integration on page')) }
 
-  // await for 1000ms tops for analytics integrations
-  // to load in page so analytics could get tracked
-  analytics.ready(onready(1000));
+  // await for 1000ms tops for segment integrations
+  // to load in page so segment could get tracked
+  segment.ready(onready(1000));
 
   function onready (timeout) {
     var timer = setTimeout(function () {
@@ -274,27 +211,13 @@ Auth0Metrics.prototype.ready = function (cb) {
 
     return function onanalyticsready() {
       if (!timer) {
-        return debug('stop analytics.ready execution fired too late')
+        return debug('stop segment.ready execution fired too late')
       }
 
       debug('segment integration ready!');
       clearTimeout(timer);
       timer = null;
       cb();
-    }
-  }
-}
-
-
-Auth0Metrics.prototype.middleware = function (opts) {
-  return function middleware (ctx, next) {
-    try {
-      debug('page track');
-      this.page();
-    } catch (e) {
-      debug(e);
-    } finally {
-      next();
     }
   }
 }
