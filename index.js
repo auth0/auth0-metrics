@@ -13,9 +13,11 @@ module.exports = Auth0Metrics;
 
 /**
  * Create `Auth0Metrics` instance
- * resolving `options`.
+ * resolving `options`. If you send an empty ('') segmentKey, it will be mocked up
  *
  * @param {String} segmentKey
+ * @param {String} dwhEndpoint
+ * @param {String} label
  * @return {Auth0Metrics}
  * @constructor
  */
@@ -58,10 +60,10 @@ Auth0Metrics.prototype.segment = function() {
     return this._segment;
 }
 
-Auth0Metrics.prototype.track = function(name, data, cb) {
+Auth0Metrics.prototype.track = function(name, data, callback) {
   var segment = this.segment();
 
-  if (!segment) {
+  if (!segment.loaded) {
     debug('track call without segment');
   }
 
@@ -74,10 +76,9 @@ Auth0Metrics.prototype.track = function(name, data, cb) {
 
   //DWH
   try {
-    this.dwh.track(name, data, cb);
+    this.dwh.track(name, data, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
-    if ('function' === typeof cb) cb(error);
   }
 }
 
@@ -96,7 +97,7 @@ Auth0Metrics.prototype.track = function(name, data, cb) {
 
 Auth0Metrics.prototype.setUserId = function(uid, override) {
   var segment = this.segment();
-  if (!segment) return;
+  if (!segment.loaded) return;
 
   try {
     var aid = segment.user().anonymousId();
@@ -108,36 +109,42 @@ Auth0Metrics.prototype.setUserId = function(uid, override) {
 }
 
 
-Auth0Metrics.prototype.identify = function (id, traits) {
+Auth0Metrics.prototype.identify = function (id, traits, callback) {
   var segment = this.segment();
-
-  if (!segment) {
-    debug('identify call without segment');
-  }
 
   if(typeof id !== 'string'){
     traits = id;
     id = null;
   }
 
+  if (segment.loaded) {
+    if(null != id){
+      this.setUserId(id);
 
-  try {
-    segment.identify(id, traits);
-  } catch (error) {
-    debug('segment analytics error: %o', error);
+      try {
+        segment.identify(id, traits);
+      } catch (error) {
+        debug('segment analytics error: %o', error);
+      }
+    }
+  }else{
+    debug('identify call without segment');
   }
 
+
+
+
   try {
-    this.dwh.identify(id, traits);
+    this.dwh.identify(id, traits, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
   }
 }
 
-Auth0Metrics.prototype.alias = function (userId) {
+Auth0Metrics.prototype.alias = function (userId, callback) {
   var segment = this.segment();
 
-  if (!segment) {
+  if (!segment.loaded) {
     debug('alias call without segment');
 
   }
@@ -151,16 +158,16 @@ Auth0Metrics.prototype.alias = function (userId) {
 
   //DWH
   try {
-    this.dwh.alias(userId);
+    this.dwh.alias(userId, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
   }
 }
 
-Auth0Metrics.prototype.page = function () {
+Auth0Metrics.prototype.page = function (callback) {
   var segment = this.segment();
 
-  if (!segment) {
+  if (!segment.loaded) {
     debug('track call without segment');
   }
 
@@ -173,7 +180,7 @@ Auth0Metrics.prototype.page = function () {
 
   //DWH
   try {
-    this.dwh.page();
+    this.dwh.page(callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
   }
@@ -196,7 +203,7 @@ Auth0Metrics.prototype.getData = function() {
 
 Auth0Metrics.prototype.ready = function (cb) {
   var segment = this.segment();
-  if (!segment) { return cb(new Error('no segment integration on page')) }
+  if (!segment.loaded) { return cb(new Error('no segment integration on page')) }
 
   // await for 1000ms tops for segment integrations
   // to load in page so segment could get tracked

@@ -1,0 +1,31 @@
+<!DOCTYPE>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <!-- support -->
+  <script src="/node_modules/mocha/mocha.js"></script>
+  <script src="/node_modules/expect.js/expect.js"></script>
+  <script src="/node_modules/sinon/pkg/sinon-1.15.4.js"></script>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+
+  <!-- libs -->
+  <script src="/build/auth0-metrics.js"></script>
+
+  <!-- config -->
+  <script src="/test/support/config.js"></script>
+
+  <!-- tests -->
+  <script src="/test/tests.js"></script>
+
+  <!-- start -->
+  <script>
+    mocha.run();
+  </script>
+</body>
+</html>
