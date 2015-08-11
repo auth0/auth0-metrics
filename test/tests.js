@@ -52,6 +52,7 @@ describe('Auth0 - Metrics', function () {
   before(function () {
     clearData();
     this.metrics = new Auth0Metrics("", DWH_URL, 'testing');
+    sinon.xhr.supportsCORS = true;
   });
 
 

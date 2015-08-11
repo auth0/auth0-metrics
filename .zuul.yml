@@ -7,7 +7,6 @@ scripts:
   - "/node_modules/jquery/dist/jquery.min.js"
   - "/node_modules/expect.js/expect.js"
   - "/node_modules/sinon/pkg/sinon-1.15.4.js"
-  - "/node_modules/sinon/pkg/sinon-ie-1.15.4.js"
   - "/build/auth0-metrics.js"
 browsers:
   - name: chrome
