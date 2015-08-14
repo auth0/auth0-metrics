@@ -72,4 +72,7 @@ Traits (additional properties) of the current user
 ### .ready(cb)
 Executes a callback when segment finishes loading.
 #### Parameters
-* `cb` function to trun when segment finishes loading.
+* `cb` function to run when segment finishes loading.
+
+## Known issues
+If you need to add traits to the current user without identifying the user id, you need to run segment's native identify, using metrics.segment().identify()
