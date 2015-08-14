@@ -54,6 +54,8 @@ Sends information of a custom event to track.
 
 ### .identify(id, traits, callback)
 Sends information of an identification (login/signup) to track.
+> NOTE: This method's arguments do not pair with the ones of `window.analytics` from Segment's [analytics.js](https://github.com/segmentio/analytics.js). In order to assign properties to an anonymous user you need to proxy directly to Segment by doing `metricsLib.segment().identify()` instead. Check Segment's (documentation)[https://segment.com/docs/libraries/analytics.js/#identify] for a detailed specification and use cases.
+
 #### Parameters
 * `id` user id to identify the current user to
 * `traits` additional properties to set to the user
@@ -67,7 +69,6 @@ Sends an alias (renaming a previous id to a new one).
 
 ### .traits()
 Traits (additional properties) of the current user
-
 
 ### .ready(cb)
 Executes a callback when segment finishes loading.
