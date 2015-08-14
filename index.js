@@ -45,7 +45,7 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
 
   debug("Loading segment...");
 
-  this._segment = require('./lib/boot-segment')(segmentKey);
+  require('./lib/boot-segment')(segmentKey);
 
 
 }
@@ -57,7 +57,7 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
 Auth0Metrics.version = require('package.version');
 
 Auth0Metrics.prototype.segment = function() {
-    return this._segment;
+    return window.analytics;
 }
 
 Auth0Metrics.prototype.track = function(name, data, callback) {
@@ -90,12 +90,11 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
  * Our most common case is to preserve it, that's why this method exists.
  *
  * @param {String} uid
- * @param {Boolean} override
  * @param {Function} cb
  * @public
  */
 
-Auth0Metrics.prototype.setUserId = function(uid, override) {
+Auth0Metrics.prototype.setUserId = function(uid) {
   var segment = this.segment();
   if (!segment.loaded) return;
 
