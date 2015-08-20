@@ -58,7 +58,7 @@
     "packageify": "^0.2.0",
     "phantomjs": "^1.9.7-15",
     "rimraf": "~2.2.2",
-    "sinon": "^1.15.4",
+    "sinon": "1.16.0",
     "through": "^2.3.4",
     "uglify-js": "~2.4.15",
     "unreleased": "^0.0.5",
