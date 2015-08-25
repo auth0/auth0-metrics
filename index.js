@@ -109,23 +109,24 @@ Auth0Metrics.prototype.setUserId = function(uid) {
 
 
 Auth0Metrics.prototype.identify = function (id, traits, callback) {
+  var args = [].slice.call(arguments);
+
+  // Argument reshuffling.
+  if (_.isFunction(traits)) callback = traits, traits = null;
+  if (_.isObject(id)) traits = id, id = null;
+
   var segment = this.segment();
 
-  if(typeof id !== 'string'){
-    traits = id;
-    id = null;
-  }
-
   if (segment.loaded) {
-    if(null != id){
-      this.setUserId(id);
+    if (null != id) this.setUserId(id);
 
-      try {
-        segment.identify(id, traits);
-      } catch (error) {
-        debug('segment analytics error: %o', error);
-      }
+    try {
+      if (_.isFunction(args[args.length - 1])) args.pop();
+      segment.identify.apply(segment, args);
+    } catch (error) {
+      debug('segment analytics error: %o', error);
     }
+
   }else{
     debug('identify call without segment');
   }

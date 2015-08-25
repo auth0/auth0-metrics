@@ -390,6 +390,113 @@ describe('Auth0 - Metrics', function () {
 
     });
 
+  describe('identify multiple arities support', function() {
+    function dwhServer() {
+      var server = sinon.fakeServer.create();
+      server.respondImmediately = true;
+      server.respondWith("POST", DWH_URL, [200, { "Content-Type": "application/json" }, '{}']);
+      return server;
+    }
+
+    function assertLastRequest(server, type, data) {
+      var lastRequest = _.last(server.requests);
+      var requestData = parseRequestBody(lastRequest);
+      expect(requestData.type).to.be(type);
+      _.forEach(data, function(expected, key) {
+        expect(requestData.data[key]).to.eql(expected)
+      });
+    }
+
+    before(function() {
+      this.id = '1';
+      this.traits = {someTrait: 'some trait'};
+    });
+
+    beforeEach(function() {
+      clearData();
+      window.analytics.loaded = true;
+      sinon.stub(window.analytics, 'identify');
+      this.server = dwhServer();
+    });
+
+    afterEach(function () {
+      window.analytics.loaded = false;
+      window.analytics.identify.restore();
+      this.server.restore();
+    });
+
+    it('can be called with an id', function() {
+      this.metrics.identify(this.id);
+
+      // delegates to segment
+      expect(window.analytics.identify.calledOnce).to.be.ok();
+      expect(window.analytics.identify.calledWithExactly(this.id)).to.be.ok();
+      // makes the request to dwh
+      assertLastRequest(this.server, 'identify', {userId: this.id});
+    });
+
+    it('can be called with a traits object', function() {
+      this.metrics.identify(this.traits);
+
+      // delegates to segment
+      expect(window.analytics.identify.calledOnce).to.be.ok();
+      expect(window.analytics.identify.calledWithExactly(this.traits)).to.be.ok();
+      // makes the request to dwh
+      assertLastRequest(this.server, 'identify', {traits: this.traits, userId: null});
+    });
+
+    it('can be called with an id and a callback', function() {
+      // NOTE: assumes synchronous callback invocation
+      var cb = sinon.spy();
+      this.metrics.identify(this.id, cb);
+
+      // delegates to segment
+      expect(window.analytics.identify.calledOnce).to.be.ok();
+      expect(window.analytics.identify.calledWithExactly(this.id)).to.be.ok();
+      // makes the request to dwh
+      assertLastRequest(this.server, 'identify', {traits: {}, userId: this.id});
+      // invokes the callback
+      expect(cb.calledOnce).to.be.ok();
+    });
+
+    it('can called with a traits object and a callback', function() {
+      // NOTE: assumes synchronous callback invocation
+      var cb = sinon.spy();
+      this.metrics.identify(this.traits, cb);
+
+      // delegates to segment
+      expect(window.analytics.identify.calledOnce).to.be.ok();
+      expect(window.analytics.identify.calledWithExactly(this.traits)).to.be.ok();
+      // makes the request to dwh
+      assertLastRequest(this.server, 'identify', {traits: this.traits, userId: null});
+      // invokes the callback
+      expect(cb.calledOnce).to.be.ok();
+    });
+
+    it('can be called with an id and a traits object', function() {
+      this.metrics.identify(this.id, this.traits);
+
+      // delegates to segment
+      expect(window.analytics.identify.calledOnce).to.be.ok();
+      expect(window.analytics.identify.calledWithExactly(this.id, this.traits)).to.be.ok();
+      // makes the request to dwh
+      assertLastRequest(this.server, 'identify', {traits: this.traits, userId: this.id});
+    });
+
+    it('can be called with an id, a traits object and a callback', function() {
+      // NOTE: assumes synchronous callback invocation
+      var cb = sinon.spy();
+      this.metrics.identify(this.id, this.traits, cb);
+
+      // delegates to segment
+      expect(window.analytics.identify.calledOnce).to.be.ok();
+      expect(window.analytics.identify.calledWithExactly(this.id, this.traits)).to.be.ok();
+      // makes the request to dwh
+      assertLastRequest(this.server, 'identify', {traits: this.traits, userId: this.id});
+      // invokes the callback
+      expect(cb.calledOnce).to.be.ok();
+    });
+  });
 });
 
 function parseRequestBody(request) {
