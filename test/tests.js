@@ -34,6 +34,17 @@ function clearData(){
 }
 
 /**
+ * Returns a sinon fake server configured to successfully respond POST requests
+ * to DWH_URL.
+ */
+function dwhServer() {
+  var server = sinon.fakeServer.create();
+  server.respondImmediately = true;
+  server.respondWith("POST", DWH_URL, [200, { "Content-Type": "application/json" }, '{}']);
+  return server;
+}
+
+/**
  * Test User and Password
  */
 
@@ -89,11 +100,7 @@ describe('Auth0 - Metrics', function () {
 
     beforeEach(function(done) {
       var ctx = this;
-      this.server = sinon.fakeServer.create();
-      this.server.respondImmediately = true;
-      this.server.respondWith("POST", DWH_URL,
-            [200, { "Content-Type": "application/json" },
-             '{}'])
+      this.server = dwhServer();
       this.lastReq = function(){
         return ctx.server.requests[ctx.server.requests.length-1];
       }
@@ -206,11 +213,7 @@ describe('Auth0 - Metrics', function () {
     });
 
     beforeEach(function() {
-      var fServer = this.server = sinon.fakeServer.create();
-      this.server.respondImmediately = true;
-      this.server.respondWith("POST", DWH_URL,
-            [200, { "Content-Type": "application/json" },
-             '{}'])
+      var fServer = this.server = dwhServer();
       this.lastReq = function(){
         return fServer.requests[fServer.requests.length-1];
       }
@@ -286,11 +289,7 @@ describe('Auth0 - Metrics', function () {
         this.metrics._segment = analytics;
 
         this.anon_id = readCookie('ajs_anonymous_id');
-        var fServer = this.server = sinon.fakeServer.create();
-        this.server.respondImmediately = true;
-        this.server.respondWith("POST", DWH_URL,
-              [200, { "Content-Type": "application/json" },
-               '{}'])
+        var fServer = this.server = dwhServer();
         this.lastReq = function(){
           return fServer.requests[fServer.requests.length-1];
         }
@@ -391,13 +390,6 @@ describe('Auth0 - Metrics', function () {
     });
 
   describe('identify multiple arities support', function() {
-    function dwhServer() {
-      var server = sinon.fakeServer.create();
-      server.respondImmediately = true;
-      server.respondWith("POST", DWH_URL, [200, { "Content-Type": "application/json" }, '{}']);
-      return server;
-    }
-
     function assertLastRequest(server, type, data) {
       var lastRequest = _.last(server.requests);
       var requestData = parseRequestBody(lastRequest);
