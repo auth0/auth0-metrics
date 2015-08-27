@@ -21,19 +21,19 @@
   "author": "Auth0 <support@auth0.com> (http://auth0.com)",
   "license": "MIT",
   "dependencies": {
-    "debug": "^2.1.2",
     "component-cookie": "^1.1.2",
     "component-url": "^0.2.1",
+    "debug": "^2.1.2",
     "lodash": "^3.10.0",
-    "superagent": "^1.3.0",
     "stluafed": "^1.0.0",
-    "uuid": "^2.0.1",
-    "store": "^1.3.17"
+    "store": "^1.3.17",
+    "superagent": "^1.3.0",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
     "brfs": "0.0.8",
     "browserify": "^8.1.1",
-    "bump": "git://github.com/ianstormtaylor/bump",
+    "bump-version": "^0.5.0",
     "ejsify": "0.1.0",
     "expect.js": "~0.2.0",
     "grunt": "^0.4.5",
