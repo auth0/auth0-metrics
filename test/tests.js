@@ -213,10 +213,7 @@ describe('Auth0 - Metrics', function () {
     });
 
     beforeEach(function() {
-      var fServer = this.server = dwhServer();
-      this.lastReq = function(){
-        return fServer.requests[fServer.requests.length-1];
-      }
+      this.server = dwhServer();
     });
 
     after(function () {
