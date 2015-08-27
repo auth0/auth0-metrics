@@ -54,7 +54,7 @@ Sends information of a custom event to track.
 
 ### .identify(id, traits, callback)
 Sends information of an identification (login/signup) to track.
-> NOTE: This method's arguments do not pair with the ones of `window.analytics` from Segment's [analytics.js](https://github.com/segmentio/analytics.js). You can proxy directly to Segment by doing `metricsLib.segment().identify()` instead. Check Segment's (documentation)[https://segment.com/docs/libraries/analytics.js/#identify] for a detailed specification and use cases.
+> NOTE: This method's signature does not fully pair with Segment's [analytics.js](https://segment.com/docs/libraries/analytics.js/#identify). You can proxy directly to Segment by doing `metricsLib.segment().identify()` instead.
 
 #### Parameters
 * `id` user id to identify the current user to
