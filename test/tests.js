@@ -216,7 +216,7 @@ describe('Auth0 - Metrics', function () {
       this.server = dwhServer();
     });
 
-    after(function () {
+    afterEach(function () {
       this.server.restore();
     });
 
