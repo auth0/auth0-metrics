@@ -223,6 +223,16 @@ module.exports = function (grunt) {
           method: 'DELETE'
         }
       }
+    },
+    jsdoc: {
+      dist : {
+        src: ['lib/**/*.js'],
+        options: {
+          destination: 'build',
+          template : "lib/loader",
+          query: "majorFileName=metrics-" + major_version
+        }
+      }
     }
   });
 
