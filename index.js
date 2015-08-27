@@ -103,7 +103,7 @@ Auth0Metrics.prototype.setUserId = function(uid) {
     segment.user().id(uid);
     segment.user().anonymousId(aid);
   } catch (error) {
-    console.error('segment error: %o', error);
+    debug('segment error: %o', error);
   }
 }
 
