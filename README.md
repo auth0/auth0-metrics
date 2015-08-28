@@ -32,6 +32,31 @@ Then you have to call the constructor with the correct dev/prod variables
 
 `var metrics = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');`
 
+### Loader
+
+A script that will asynchronously load `auth0-metrics.js` is also provided.
+
+```html
+<script src="auth0-metrics-loader.js"></script>
+<script>
+  metricsLib.load({
+    segmentKey: 'segmentKey',
+    dwhEndpoint: 'dwhEndpoint',
+    label: 'website'
+  });
+</script>
+```
+
+Once loaded, an instance of `Auth0Metrics` will be available on `metricsLib`. Calls to public instance methods of `Auth0Metrics` on `metricsLib` will be silently ignored until then.
+
+```js
+// tracks the page if auth0-metrics.js has been loaded, otherwise the call is
+// ignored and doesn't produce an error.
+metricsLib.page();
+```
+
+If `auth0-metrics.js` has already been loaded, the script will not attempt load it again, and will simply create an instance of `Auth0Metrics` with the given configuration.
+
 ## API
 
 
