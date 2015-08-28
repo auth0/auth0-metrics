@@ -60,20 +60,36 @@ function getLastRequestBody(server) {
 }
 
 /**
+ * Asserts that the data attribute of a request contains some common information
+ * taken from the browser that is included in all requests.
+ */
+function testBasicData(data) {
+  expect(data.path).to.be(window.location.pathname);
+  expect(data.referrer).to.be(document.referrer);
+  expect(data.title).to.be(document.title);
+  expect(data.userAgent).to.be(navigator.userAgent);
+  expect(data.url).to.be(window.location.toString());
+  expect(data.search).to.be(window.location.search);
+}
+
+/**
+ * Asserts that last request made to a sinon fake server was of the given type,
+ * and contains the given data along some basic data included in all request.
+ */
+function assertLastRequest(server, type, data) {
+  var requestData = getLastRequestBody(server);
+  expect(requestData.type).to.be(type);
+  testBasicData(requestData.data);
+  _.forEach(data, function(expected, key) {
+    expect(requestData.data[key]).to.eql(expected)
+  });
+}
+
+/**
  * Test User and Password
  */
 
 describe('Auth0 - Metrics', function () {
-
-
-    function testBasicData(data, expected) {
-      expect(data.path).to.be(window.location.pathname);
-      expect(data.referrer).to.be(document.referrer);
-      expect(data.title).to.be(document.title);
-      expect(data.userAgent).to.be(navigator.userAgent);
-      expect(data.url).to.be(window.location.toString());
-      expect(data.search).to.be(window.location.search);
-    }
 
   before(function () {
     clearData();
@@ -396,14 +412,6 @@ describe('Auth0 - Metrics', function () {
     });
 
   describe('identify multiple arities support', function() {
-    function assertLastRequest(server, type, data) {
-      var requestData = getLastRequestBody(server);
-      expect(requestData.type).to.be(type);
-      _.forEach(data, function(expected, key) {
-        expect(requestData.data[key]).to.eql(expected)
-      });
-    }
-
     before(function() {
       this.id = '1';
       this.traits = {someTrait: 'some trait'};
