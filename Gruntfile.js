@@ -224,7 +224,7 @@ module.exports = function (grunt) {
   }
 
   grunt.registerTask('js',            ['clean:js', 'browserify:debug', 'exec:uglify']);
-  grunt.registerTask('build',         ['js']);
+  grunt.registerTask('build',         ['js', 'jsdoc']);
 
   grunt.registerTask('demo',          ['less:demo', 'connect:demo', 'build', 'watch']);
 
