@@ -151,12 +151,10 @@ describe('Auth0 - Metrics', function () {
     it('should track the current page', function (done) {
       var ctx = this;
       this.metrics.page(function(){
-        var requestData = getLastRequestBody(ctx.server);
-        var data = requestData.data;
-        testBasicData(data);
-        expect(data.label).to.be('testing');
-        expect(requestData.type).to.be('page');
-        expect(data.storageType).to.be('cookie');
+        assertLastRequest(ctx.server, 'page', {
+          label: 'testing',
+          storageType: 'cookie'
+        });
 
         ctx.anon_id = readCookie('ajs_anonymous_id');
         expect(ctx.anon_id).to.be.a('string');
@@ -179,14 +177,13 @@ describe('Auth0 - Metrics', function () {
       };
 
       this.metrics.identify("1", traits, function(){
-        var requestData = getLastRequestBody(ctx.server);
-        var data = requestData.data;
-        testBasicData(data);
-        expect(data.label).to.be('testing');
-        expect(requestData.type).to.be('identify');
-        expect(data.storageType).to.be('cookie');
-        expect(data.userId).to.be("1");
-        expect(JSON.stringify(data.traits)).to.be(JSON.stringify(traits));
+        assertLastRequest(ctx.server, 'identify', {
+          label: 'testing',
+          storageType: 'cookie',
+          userId: '1',
+          traits: traits
+        });
+
         expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
 
         done();
@@ -196,16 +193,17 @@ describe('Auth0 - Metrics', function () {
 
     it('should let you track a testing event', function(done) {
       var ctx = this;
-      this.metrics.track("testevent", {'testing': 5}, function(){
-        var requestData = getLastRequestBody(ctx.server);
-        var data = requestData.data;
-        testBasicData(data);
-        expect(data.label).to.be('testing');
-        expect(requestData.type).to.be('track');
-        expect(data.storageType).to.be('cookie');
-        expect(data.userId).to.be("1");
-        expect(data.event).to.be('testevent');
-        expect(data.properties.testing).to.be(5);
+      var event = 'testevent';
+      var properties = {testing: 5};
+      this.metrics.track(event, properties, function(){
+        assertLastRequest(ctx.server, 'track', {
+          label: 'testing',
+          storageType: 'cookie',
+          userId: '1',
+          event: event,
+          properties: properties
+        });
+
         expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
 
         done();
@@ -217,13 +215,12 @@ describe('Auth0 - Metrics', function () {
     it('should let you alias an id', function(done) {
       var ctx = this;
       this.metrics.alias("2", function(){
-        var requestData = getLastRequestBody(ctx.server);
-        var data = requestData.data;
-        testBasicData(data);
-        expect(data.label).to.be('testing');
-        expect(requestData.type).to.be('alias');
-        expect(data.storageType).to.be('cookie');
-        expect(data.userId).to.be("2");
+        assertLastRequest(ctx.server, 'alias', {
+          label: 'testing',
+          storageType: 'cookie',
+          userId: '2'
+        });
+
         expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
 
         done();
@@ -329,12 +326,10 @@ describe('Auth0 - Metrics', function () {
           it('should track the current page', function (done) {
             var ctx = this;
             this.metrics.page(function(){
-              var requestData = getLastRequestBody(ctx.server);
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('page');
-              expect(data.storageType).to.be('cookie');
+              assertLastRequest(ctx.server, 'page', {
+                label: 'testing',
+                storageType: 'cookie'
+              });
 
               ctx.anon_id = readCookie('ajs_anonymous_id');
               expect(ctx.anon_id).to.be.a('string');
@@ -357,14 +352,13 @@ describe('Auth0 - Metrics', function () {
             };
 
             this.metrics.identify("1", traits, function(){
-              var requestData = getLastRequestBody(ctx.server);
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('identify');
-              expect(data.storageType).to.be('cookie');
-              expect(data.userId).to.be("1");
-              expect(JSON.stringify(data.traits)).to.be(JSON.stringify(traits));
+              assertLastRequest(ctx.server, 'identify', {
+                label: 'testing',
+                storageType: 'cookie',
+                userId: '1',
+                traits: traits
+              });
+
               expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
 
               done();
@@ -374,16 +368,17 @@ describe('Auth0 - Metrics', function () {
 
           it('should let you track a testing event', function(done) {
             var ctx = this;
-            this.metrics.track("testevent", {'testing': 5}, function(){
-              var requestData = getLastRequestBody(ctx.server);
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('track');
-              expect(data.storageType).to.be('cookie');
-              expect(data.userId).to.be("1");
-              expect(data.event).to.be('testevent');
-              expect(data.properties.testing).to.be(5);
+            var event = 'testevent';
+            var properties = {testing: 5};
+            this.metrics.track(event, properties, function(){
+              assertLastRequest(ctx.server, 'track', {
+                label: 'testing',
+                storageType: 'cookie',
+                userId: '1',
+                event: event,
+                properties: properties
+              });
+
               expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
 
               done();
@@ -395,13 +390,12 @@ describe('Auth0 - Metrics', function () {
           it('should let you alias an id', function(done) {
             var ctx = this;
             this.metrics.alias("2", function(){
-              var requestData = getLastRequestBody(ctx.server);
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('alias');
-              expect(data.storageType).to.be('cookie');
-              expect(data.userId).to.be("2");
+              assertLastRequest(ctx.server, 'alias', {
+                label: 'testing',
+                storageType: 'cookie',
+                userId: '2'
+              });
+
               expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
 
               done();
