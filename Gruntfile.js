@@ -147,7 +147,11 @@ module.exports = function (grunt) {
           { action: 'delete', dest: 'js/m/metrics-' + major_version + '.js' },
           { action: 'delete', dest: 'js/m/metrics-' + major_version + '.min.js' },
           { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.js' },
-          { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.min.js' }
+          { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.min.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + pkg.version + '.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + major_version + '.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + minor_version + '.js' }
+
         ]
       },
       publish: {
@@ -201,6 +205,24 @@ module.exports = function (grunt) {
       purge_minor_js_min: {
         options: {
           url: process.env.CDN_ROOT + '/js/m/metrics-' + minor_version + '.min.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_js: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + pkg.version + '.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_major_js: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + major_version + '.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_minor_js: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + minor_version + '.js',
           method: 'DELETE'
         }
       }
