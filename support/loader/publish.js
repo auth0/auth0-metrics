@@ -24,7 +24,7 @@ exports.publish = function(data, opts) {
   // thing we care about.
   var methods = data(query).get().map(function(x) { return x.name; });
 
-  var rendered = ejs.renderFile('./support/loader.js.ejs', {
+  var rendered = ejs.renderFile('./support/loader/loader.js.ejs', {
     globalNamespace: "metricsLib",
     loadErrorMessage: "metricsLib couldn't be loaded.",
     majorFileName: env.opts.query.majorFileName,

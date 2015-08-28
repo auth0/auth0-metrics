@@ -232,7 +232,7 @@ module.exports = function (grunt) {
         src: ['lib/**/*.js'],
         options: {
           destination: 'build',
-          template : "lib/loader",
+          template : "support/loader",
           query: "majorFileName=metrics-" + major_version
         }
       }
