@@ -167,25 +167,6 @@ module.exports = function (grunt) {
         development: false
       }
     },
-    /* Purge FASTLY cache. */
-    fastly: {
-      options: {
-        key:  process.env.FASTLY_KEY,
-        host: process.env.FASTLY_HOST
-      },
-      purge: {
-        options: {
-          urls: [
-            'js/m/metrics-' + pkg.version + '.js',
-            'js/m/metrics-' + pkg.version + '.min.js',
-            'js/m/metrics-' + major_version + '.js',
-            'js/m/metrics-' + major_version + '.min.js',
-            'js/m/metrics-' + minor_version + '.js',
-            'js/m/metrics-' + minor_version + '.min.js',
-          ]
-        },
-      },
-    },
     http: {
       purge_js: {
         options: {
