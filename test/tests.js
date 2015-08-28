@@ -45,6 +45,21 @@ function dwhServer() {
 }
 
 /**
+ * Returns the last request made to a sinon fake server.
+ */
+function getLastRequest(server) {
+  return _.last(server.requests);
+}
+
+/**
+ * Returns the body of the last request made to a sinon fake server parsed as
+ * JSON.
+ */
+function getLastRequestBody(server) {
+  return parseRequestBody(getLastRequest(server));
+}
+
+/**
  * Test User and Password
  */
 
@@ -101,9 +116,6 @@ describe('Auth0 - Metrics', function () {
     beforeEach(function(done) {
       var ctx = this;
       this.server = dwhServer();
-      this.lastReq = function(){
-        return ctx.server.requests[ctx.server.requests.length-1];
-      }
 
       this.metrics.page(function(){
         ctx.anon_id = readCookie('ajs_anonymous_id');
@@ -123,7 +135,7 @@ describe('Auth0 - Metrics', function () {
     it('should track the current page', function (done) {
       var ctx = this;
       this.metrics.page(function(){
-        var requestData = parseRequestBody(ctx.lastReq());
+        var requestData = getLastRequestBody(ctx.server);
         var data = requestData.data;
         testBasicData(data);
         expect(data.label).to.be('testing');
@@ -151,7 +163,7 @@ describe('Auth0 - Metrics', function () {
       };
 
       this.metrics.identify("1", traits, function(){
-        var requestData = parseRequestBody(ctx.lastReq());
+        var requestData = getLastRequestBody(ctx.server);
         var data = requestData.data;
         testBasicData(data);
         expect(data.label).to.be('testing');
@@ -169,7 +181,7 @@ describe('Auth0 - Metrics', function () {
     it('should let you track a testing event', function(done) {
       var ctx = this;
       this.metrics.track("testevent", {'testing': 5}, function(){
-        var requestData = parseRequestBody(ctx.lastReq());
+        var requestData = getLastRequestBody(ctx.server);
         var data = requestData.data;
         testBasicData(data);
         expect(data.label).to.be('testing');
@@ -189,7 +201,7 @@ describe('Auth0 - Metrics', function () {
     it('should let you alias an id', function(done) {
       var ctx = this;
       this.metrics.alias("2", function(){
-        var requestData = parseRequestBody(ctx.lastReq());
+        var requestData = getLastRequestBody(ctx.server);
         var data = requestData.data;
         testBasicData(data);
         expect(data.label).to.be('testing');
@@ -286,10 +298,7 @@ describe('Auth0 - Metrics', function () {
         this.metrics._segment = analytics;
 
         this.anon_id = readCookie('ajs_anonymous_id');
-        var fServer = this.server = dwhServer();
-        this.lastReq = function(){
-          return fServer.requests[fServer.requests.length-1];
-        }
+        this.server = dwhServer();
 
       });
 
@@ -304,7 +313,7 @@ describe('Auth0 - Metrics', function () {
           it('should track the current page', function (done) {
             var ctx = this;
             this.metrics.page(function(){
-              var requestData = parseRequestBody(ctx.lastReq());
+              var requestData = getLastRequestBody(ctx.server);
               var data = requestData.data;
               testBasicData(data);
               expect(data.label).to.be('testing');
@@ -332,7 +341,7 @@ describe('Auth0 - Metrics', function () {
             };
 
             this.metrics.identify("1", traits, function(){
-              var requestData = parseRequestBody(ctx.lastReq());
+              var requestData = getLastRequestBody(ctx.server);
               var data = requestData.data;
               testBasicData(data);
               expect(data.label).to.be('testing');
@@ -350,7 +359,7 @@ describe('Auth0 - Metrics', function () {
           it('should let you track a testing event', function(done) {
             var ctx = this;
             this.metrics.track("testevent", {'testing': 5}, function(){
-              var requestData = parseRequestBody(ctx.lastReq());
+              var requestData = getLastRequestBody(ctx.server);
               var data = requestData.data;
               testBasicData(data);
               expect(data.label).to.be('testing');
@@ -370,7 +379,7 @@ describe('Auth0 - Metrics', function () {
           it('should let you alias an id', function(done) {
             var ctx = this;
             this.metrics.alias("2", function(){
-              var requestData = parseRequestBody(ctx.lastReq());
+              var requestData = getLastRequestBody(ctx.server);
               var data = requestData.data;
               testBasicData(data);
               expect(data.label).to.be('testing');
@@ -388,8 +397,7 @@ describe('Auth0 - Metrics', function () {
 
   describe('identify multiple arities support', function() {
     function assertLastRequest(server, type, data) {
-      var lastRequest = _.last(server.requests);
-      var requestData = parseRequestBody(lastRequest);
+      var requestData = getLastRequestBody(server);
       expect(requestData.type).to.be(type);
       _.forEach(data, function(expected, key) {
         expect(requestData.data[key]).to.eql(expected)
