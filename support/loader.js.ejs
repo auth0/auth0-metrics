@@ -16,11 +16,11 @@
   }
   <%= locals.globalNamespace %>.load = loader;
 
-  function loader(segmentKey, dwhEndpoint, label) {
+  function loader(config) {
     // TODO: validate arguments and throw an error if needed
 
     if(null != window.Auth0Metrics){
-      window.<%= locals.globalNamespace %> = new Auth0Metrics(segmentKey, dwhEndpoint, label);
+      window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
       return;
     }
 
@@ -35,7 +35,7 @@
     }
     script.onload = function(){
       // Grab analytics and make it private
-      window.<%= locals.globalNamespace %> = new Auth0Metrics(segmentKey, dwhEndpoint, label);
+      window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
     }
     var first = document.getElementsByTagName('script')[0];
     first.parentNode.insertBefore(script, first);
