@@ -56,10 +56,16 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
 
 Auth0Metrics.version = require('package.version');
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.segment = function() {
     return window.analytics;
 }
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.track = function(name, data, callback) {
   var segment = this.segment();
 
@@ -107,7 +113,9 @@ Auth0Metrics.prototype.setUserId = function(uid) {
   }
 }
 
-
+/**
+ * @public
+ */
 Auth0Metrics.prototype.identify = function (id, traits, callback) {
   var args = [].slice.call(arguments);
 
@@ -141,6 +149,9 @@ Auth0Metrics.prototype.identify = function (id, traits, callback) {
   }
 }
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.alias = function (userId, callback) {
   var segment = this.segment();
 
@@ -164,6 +175,9 @@ Auth0Metrics.prototype.alias = function (userId, callback) {
   }
 }
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.page = function (callback) {
   var segment = this.segment();
 
@@ -186,10 +200,16 @@ Auth0Metrics.prototype.page = function (callback) {
   }
 }
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.traits = function() {
   return this.dwh.traits();
 }
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.getData = function() {
   return {
     path: window.location.pathname,
@@ -201,6 +221,9 @@ Auth0Metrics.prototype.getData = function() {
   }
 }
 
+/**
+ * @public
+ */
 Auth0Metrics.prototype.ready = function (cb) {
   var segment = this.segment();
   if (!segment.loaded) { return cb(new Error('no segment integration on page')) }

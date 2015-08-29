@@ -32,6 +32,56 @@ Then you have to call the constructor with the correct dev/prod variables
 
 `var metrics = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');`
 
+### Loader
+
+A script that will asynchronously load `auth0-metrics.js` is also provided.
+
+```html
+<script src="auth0-metrics-loader.js"></script>
+<script>
+  metricsLib.load({
+    segmentKey: 'segmentKey',
+    dwhEndpoint: 'dwhEndpoint',
+    label: 'website'
+  });
+</script>
+```
+
+Once loaded, an instance of `Auth0Metrics` will be available on `metricsLib`. Calls to public instance methods of `Auth0Metrics` on `metricsLib` will be silently ignored until then.
+
+```js
+// tracks the page if auth0-metrics.js has been loaded, otherwise the call is
+// ignored and doesn't produce an error.
+metricsLib.page();
+```
+
+If `auth0-metrics.js` has already been loaded, the script will not attempt load it again, and will simply create an instance of `Auth0Metrics` with the given configuration.
+
+Using the loader may also be desired when loading `auth0-metrics.js` synchronously. If there's an exception during the instantiation of `Auth0Metrics`, the stubs methods will still be in place and calls like the one above to `page` won't throw.
+
+```html
+<script src="auth0-metrics.js"></script>
+<script src="auth0-metrics-loader.js"></script>
+<script>
+  metricsLib.load({
+    segmentKey: 'segmentKey',
+    dwhEndpoint: 'dwhEndpoint',
+    label: 'website'
+  });
+</script>
+```
+
+Contrast the previous snippet with the following that instantiates `Auth0Metrics` directly.
+
+```html
+<script src="auth0-metrics.js"></script>
+<script>
+  var metricsLib = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');
+</script>
+```
+
+If the instantiation doesn't succeed, trying to call a method on `metricsLib` will throw because it is `undefined` and may break the behavior of your site.
+
 ## API
 
 

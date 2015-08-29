@@ -147,7 +147,11 @@ module.exports = function (grunt) {
           { action: 'delete', dest: 'js/m/metrics-' + major_version + '.js' },
           { action: 'delete', dest: 'js/m/metrics-' + major_version + '.min.js' },
           { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.js' },
-          { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.min.js' }
+          { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.min.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + pkg.version + '.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + major_version + '.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + minor_version + '.js' }
+
         ]
       },
       publish: {
@@ -166,25 +170,6 @@ module.exports = function (grunt) {
       release: {
         development: false
       }
-    },
-    /* Purge FASTLY cache. */
-    fastly: {
-      options: {
-        key:  process.env.FASTLY_KEY,
-        host: process.env.FASTLY_HOST
-      },
-      purge: {
-        options: {
-          urls: [
-            'js/m/metrics-' + pkg.version + '.js',
-            'js/m/metrics-' + pkg.version + '.min.js',
-            'js/m/metrics-' + major_version + '.js',
-            'js/m/metrics-' + major_version + '.min.js',
-            'js/m/metrics-' + minor_version + '.js',
-            'js/m/metrics-' + minor_version + '.min.js',
-          ]
-        },
-      },
     },
     http: {
       purge_js: {
@@ -222,6 +207,34 @@ module.exports = function (grunt) {
           url: process.env.CDN_ROOT + '/js/m/metrics-' + minor_version + '.min.js',
           method: 'DELETE'
         }
+      },
+      purge_loader_js: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + pkg.version + '.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_major_js: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + major_version + '.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_minor_js: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + minor_version + '.js',
+          method: 'DELETE'
+        }
+      }
+    },
+    jsdoc: {
+      dist : {
+        src: ['lib/**/*.js'],
+        options: {
+          destination: 'build',
+          template : "support/loader",
+          query: "majorFileName=metrics-" + major_version
+        }
       }
     }
   });
@@ -233,7 +246,7 @@ module.exports = function (grunt) {
   }
 
   grunt.registerTask('js',            ['clean:js', 'browserify:debug', 'exec:uglify']);
-  grunt.registerTask('build',         ['js']);
+  grunt.registerTask('build',         ['js', 'jsdoc']);
 
   grunt.registerTask('demo',          ['less:demo', 'connect:demo', 'build', 'watch']);
 
