@@ -72,6 +72,7 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
     segment.track.call(segment, name, _.assign({}, this.getData(), data || {}), null);
   } catch (error) {
     debug('segment analytics error: %o', error);
+    this._trackSegmentError(error);
   }
 
   //DWH
@@ -176,6 +177,7 @@ Auth0Metrics.prototype.page = function (callback) {
     segment.page.apply(segment, arguments);
   } catch (error) {
     debug('segment analytics error: %o', error);
+    this._trackSegmentError(error);
   }
 
   //DWH
@@ -227,4 +229,11 @@ Auth0Metrics.prototype.ready = function (cb) {
       cb();
     }
   }
+}
+
+Auth0Metrics.prototype._trackSegmentError = function(error) {
+  this.dwh.track('segment-error', {
+    messsage: error.message,
+    stack: error.stack
+  });
 }
