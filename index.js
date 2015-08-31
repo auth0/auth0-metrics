@@ -232,8 +232,12 @@ Auth0Metrics.prototype.ready = function (cb) {
 }
 
 Auth0Metrics.prototype._trackSegmentError = function(error) {
-  this.dwh.track('segment-error', {
-    messsage: error.message,
-    stack: error.stack
-  });
+  try {
+    this.dwh.track('segment-error', {
+      messsage: error.message,
+      stack: error.stack
+    });
+  } catch (error) {
+    debug('dwh analytics error: %o', error);
+  }
 }
