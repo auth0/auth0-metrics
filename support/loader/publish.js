@@ -24,6 +24,10 @@ exports.publish = function(data, opts) {
   // thing we care about.
   var methods = data(query).get().map(function(x) { return x.name; });
 
+  if (!methods.length) {
+    throw new Error("Can't build loader script, no public methods to stub have been found.");
+  }
+
   var rendered = ejs.renderFile('./support/loader/loader.js.ejs', {
     globalNamespace: "metricsLib",
     loadErrorMessage: "metricsLib couldn't be loaded.",
