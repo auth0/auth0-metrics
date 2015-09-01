@@ -229,7 +229,7 @@ module.exports = function (grunt) {
     },
     jsdoc: {
       dist : {
-        src: ['lib/**/*.js'],
+        src: 'index.js',
         options: {
           destination: 'build',
           template : "support/loader",
