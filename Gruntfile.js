@@ -210,19 +210,19 @@ module.exports = function (grunt) {
       },
       purge_loader_js: {
         options: {
-          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + pkg.version + '.js',
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + pkg.version + '.js',
           method: 'DELETE'
         }
       },
       purge_loader_major_js: {
         options: {
-          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + major_version + '.js',
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + major_version + '.js',
           method: 'DELETE'
         }
       },
       purge_loader_minor_js: {
         options: {
-          url: process.env.CDN_ROOT + '/js/m/metrics-loader' + minor_version + '.js',
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + minor_version + '.js',
           method: 'DELETE'
         }
       }
@@ -254,7 +254,7 @@ module.exports = function (grunt) {
   grunt.registerTask('integration',   ['exec:test-inception', 'exec:test-integration']);
   grunt.registerTask('phantom',       ['build', 'exec:test-inception', 'exec:test-phantom']);
 
-  grunt.registerTask('purge_cdn',     ['http:purge_js', 'http:purge_js_min', 'http:purge_major_js', 'http:purge_major_js_min', 'http:purge_minor_js', 'http:purge_minor_js_min']);
+  grunt.registerTask('purge_cdn',     ['http:purge_js', 'http:purge_js_min', 'http:purge_major_js', 'http:purge_major_js_min', 'http:purge_minor_js', 'http:purge_minor_js_min', 'http:purge_loader_js', 'http:purge_loader_major_js', 'http:purge_loader_minor_js']);
 
   grunt.registerTask('cdn',           ['build', 'copy:release', 'aws_s3:clean', 'aws_s3:publish', 'purge_cdn']);
 };
