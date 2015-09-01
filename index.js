@@ -126,6 +126,7 @@ Auth0Metrics.prototype.identify = function (id, traits, callback) {
       segment.identify.apply(segment, args);
     } catch (error) {
       debug('segment analytics error: %o', error);
+      this._trackSegmentError(error);
     }
 
   }else{
@@ -155,6 +156,7 @@ Auth0Metrics.prototype.alias = function (userId, callback) {
     segment.alias.apply(segment, arguments);
   } catch (error) {
     debug('segment analytics error: %o', error);
+    this._trackSegmentError(error);
   }
 
   //DWH
