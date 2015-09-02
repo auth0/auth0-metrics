@@ -120,12 +120,14 @@ function setupMetrics(segmentKey) {
 describe('Auth0 - Metrics', function () {
 
   before(function () {
-    this.metrics = setupMetrics('');
     sinon.xhr.supportsCORS = true;
   });
 
 
   describe('unavailable metrics server', function() {
+    before(function () {
+      this.metrics = setupMetrics('');
+    });
 
     it('should fail silently on page', function(done) {
       this.metrics.page();
@@ -152,7 +154,7 @@ describe('Auth0 - Metrics', function () {
 
   describe('normal page track flow', function() {
     before(function() {
-      clearData();
+      this.metrics = setupMetrics('');
       this.anon_id = null;
     });
 
@@ -260,7 +262,7 @@ describe('Auth0 - Metrics', function () {
 
   describe('multiple identify', function() {
     before(function() {
-      clearData();
+      this.metrics = setupMetrics('');
       this.anon_id = readCookie('ajs_anonymous_id');
     });
 
@@ -294,7 +296,7 @@ describe('Auth0 - Metrics', function () {
     describe('normal page track flow without segment', function() {
       var segmentSave;
       before(function() {
-        clearData();
+        this.metrics = setupMetrics('');
         segmentSave = this.metrics._segment;
 
         var analytics = [];
@@ -434,6 +436,7 @@ describe('Auth0 - Metrics', function () {
 
   describe('identify multiple arities support', function() {
     before(function() {
+      this.metrics = setupMetrics('');
       this.id = '1';
       this.traits = {someTrait: 'some trait'};
     });
