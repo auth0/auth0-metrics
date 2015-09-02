@@ -93,6 +93,11 @@ module.exports = function (grunt) {
         stdout: true,
         stderr: true
       },
+      'uglify-loader': {
+        cmd: node_bin('uglifyjs') + ' build/auth0-metrics-loader.js  -b beautify=false,ascii_only=true > build/auth0-metrics-loader.min.js',
+        stdout: true,
+        stderr: true
+      },
       'test-inception': {
         cmd: node_bin('mocha') + ' ./test/support/characters-inception.test.js',
         stdout: true,
@@ -150,8 +155,10 @@ module.exports = function (grunt) {
           { action: 'delete', dest: 'js/m/metrics-' + minor_version + '.min.js' },
           { action: 'delete', dest: 'js/m/metrics-loader-' + pkg.version + '.js' },
           { action: 'delete', dest: 'js/m/metrics-loader-' + major_version + '.js' },
-          { action: 'delete', dest: 'js/m/metrics-loader-' + minor_version + '.js' }
-
+          { action: 'delete', dest: 'js/m/metrics-loader-' + minor_version + '.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + pkg.version + '.min.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + major_version + '.min.js' },
+          { action: 'delete', dest: 'js/m/metrics-loader-' + minor_version + '.min.js' }
         ]
       },
       publish: {
@@ -225,6 +232,24 @@ module.exports = function (grunt) {
           url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + minor_version + '.js',
           method: 'DELETE'
         }
+      },
+      purge_loader_js_min: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + pkg.version + '.min.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_major_js_min: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + major_version + '.min.js',
+          method: 'DELETE'
+        }
+      },
+      purge_loader_minor_js_min: {
+        options: {
+          url: process.env.CDN_ROOT + '/js/m/metrics-loader-' + minor_version + '.min.js',
+          method: 'DELETE'
+        }
       }
     },
     jsdoc: {
@@ -246,7 +271,8 @@ module.exports = function (grunt) {
   }
 
   grunt.registerTask('js',            ['clean:js', 'browserify:debug', 'exec:uglify']);
-  grunt.registerTask('build',         ['js', 'jsdoc']);
+  grunt.registerTask('loader',        ['jsdoc', 'exec:uglify-loader']);
+  grunt.registerTask('build',         ['js', 'loader']);
 
   grunt.registerTask('demo',          ['less:demo', 'connect:demo', 'build', 'watch']);
 
@@ -254,7 +280,7 @@ module.exports = function (grunt) {
   grunt.registerTask('integration',   ['exec:test-inception', 'exec:test-integration']);
   grunt.registerTask('phantom',       ['build', 'exec:test-inception', 'exec:test-phantom']);
 
-  grunt.registerTask('purge_cdn',     ['http:purge_js', 'http:purge_js_min', 'http:purge_major_js', 'http:purge_major_js_min', 'http:purge_minor_js', 'http:purge_minor_js_min', 'http:purge_loader_js', 'http:purge_loader_major_js', 'http:purge_loader_minor_js']);
+  grunt.registerTask('purge_cdn',     ['http:purge_js', 'http:purge_js_min', 'http:purge_major_js', 'http:purge_major_js_min', 'http:purge_minor_js', 'http:purge_minor_js_min', 'http:purge_loader_js', 'http:purge_loader_major_js', 'http:purge_loader_minor_js', 'http:purge_loader_js_min', 'http:purge_loader_major_js_min', 'http:purge_loader_minor_js_min']);
 
   grunt.registerTask('cdn',           ['build', 'copy:release', 'aws_s3:clean', 'aws_s3:publish', 'purge_cdn']);
 };
