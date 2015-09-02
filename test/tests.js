@@ -86,14 +86,41 @@ function assertLastRequest(server, type, data) {
 }
 
 /**
+ * Returns a new Auth0Metrics instance after reverting all the side-effects that
+ * previous instances may have caused.
+ */
+function setupMetrics(segmentKey) {
+  function scriptTagCount() {
+    return document.getElementsByTagName("script").length;
+  }
+
+  clearData();
+  delete window.analytics;
+  var scriptCountBefore = scriptTagCount();
+  var metrics = new Auth0Metrics(segmentKey, DWH_URL, 'testing');
+  var scriptCountAfter = scriptTagCount();
+
+  if (segmentKey === '') {
+    if (scriptCountBefore !== scriptCountAfter) {
+      throw new Error("An attempt to load segment's analytics was made even though a empty `segmentKey` was provided.");
+    }
+  } else {
+    if (scriptCountAfter - scriptCountBefore !== 1) {
+      throw new Error("An attempt to load segment's analytics wasn't made even though a nonempty `segmentKey` was provided.");
+    }
+  }
+
+  return metrics;
+}
+
+/**
  * Test User and Password
  */
 
 describe('Auth0 - Metrics', function () {
 
   before(function () {
-    clearData();
-    this.metrics = new Auth0Metrics("", DWH_URL, 'testing');
+    this.metrics = setupMetrics('');
     sinon.xhr.supportsCORS = true;
   });
 
