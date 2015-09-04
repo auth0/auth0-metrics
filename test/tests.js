@@ -8,6 +8,30 @@ mocha.globals(['jQuery*', 'analytics', 'GoogleAnalyticsObject', 'ga', 'mixpanel'
 
 var DWH_URL = "//testurl/dwh-metrics";
 
+function levelsUrl(url){
+  var host = window.location.hostname;
+  var parts = host.split('.');
+  var last = parts[parts.length-1];
+  var levels = [];
+
+  // Ip address.
+  if (4 == parts.length && parseInt(last, 10) == last) {
+    return levels;
+  }
+
+  // Localhost.
+  if (1 >= parts.length) {
+    return levels.push(''), levels;
+  }
+
+  // Create levels.
+  for (var i = parts.length-2; 0 <= i; --i) {
+    levels.push(parts.slice(i).join('.'));
+  }
+
+  return levels;
+};
+
 /* Utility functions */
 function readCookie(name) {
     var nameEQ = encodeURIComponent(name) + "=";
@@ -27,7 +51,8 @@ function clearData(){
     var cookie = cookies[i];
     var eqPos = cookie.indexOf("=");
     var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    var domain = levelsUrl(window.location.href)[0];
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=" + domain;
   }
 
   localStorage.clear();
