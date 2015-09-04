@@ -64,7 +64,7 @@
     "uglify-js": "~2.4.15",
     "unreleased": "^0.0.5",
     "zuul": "^3.4.0",
-    "zuul-ngrok": "^3.1.0"
+    "zuul-ngrok": "cristiandouce/zuul-ngrok#v3.1.0-auth0"
   },
   "browserify": {
     "transform": [
