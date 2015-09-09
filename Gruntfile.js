@@ -31,7 +31,7 @@ module.exports = function (grunt) {
       demo: {
         options: {
           hostname: '*',
-          base: ['support/development-demo', 'support/development-demo/build', 'build'],
+          base: ['support/development-demo', 'support/development-demo/build', 'build', '.'],
           port: 3000
         }
       }
@@ -170,12 +170,6 @@ module.exports = function (grunt) {
             dest:   'js/m/'
           }
         ]
-      }
-    },
-    /* Checks for outdated npm dependencies before release. */
-    outdated: {
-      release: {
-        development: false
       }
     },
     http: {

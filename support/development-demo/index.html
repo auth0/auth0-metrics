@@ -113,7 +113,7 @@
             script.async = true;
             script.src = ('https:' === document.location.protocol
               ? 'https://' : 'http://')
-              + 'localhost:9999/build/auth0-metrics.js';
+              + window.location.host + '/build/auth0-metrics.js';
             script.onerror = function(){
               console.error("No metrics");
             }
@@ -127,7 +127,7 @@
             first.parentNode.insertBefore(script, first);
           };
 
-          metrics.load("WqErZyd56ob3pmMDnko55hNgFt8B4Zox", "http://localhost:4002/dwh-metrics");
+          metrics.load("WqErZyd56ob3pmMDnko55hNgFt8B4Zox", "http://auth0-metrics-server.herokuapp.com/dwh-metrics");
           }();
 
           metrics.ready(function(){

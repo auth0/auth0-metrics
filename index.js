@@ -69,6 +69,7 @@ Auth0Metrics.prototype.segment = function() {
  */
 Auth0Metrics.prototype.track = function(name, data, callback) {
   var segment = this.segment();
+  var extended = this.extendData(data);
 
   if (!segment.loaded) {
     debug('track call without segment');
@@ -76,7 +77,7 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
 
   //Segment
   try {
-    segment.track.call(segment, name, _.assign({}, this.getData(), data || {}), null);
+    segment.track.call(segment, name, extended, null);
   } catch (error) {
     debug('segment analytics error: %o', error);
     this._trackSegmentError('track', error);
@@ -84,7 +85,7 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
 
   //DWH
   try {
-    this.dwh.track(name, data, callback);
+    this.dwh.track(name, extended, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
   }
@@ -138,12 +139,9 @@ Auth0Metrics.prototype.identify = function (id, traits, callback) {
       this._trackSegmentError('identify', error);
     }
 
-  }else{
+  } else{
     debug('identify call without segment');
   }
-
-
-
 
   try {
     this.dwh.identify(id, traits, callback);
@@ -217,7 +215,6 @@ Auth0Metrics.prototype.traits = function() {
  */
 Auth0Metrics.prototype.getData = function() {
   return {
-    uuid: uuid(),
     path: window.location.pathname,
     url: window.location.toString(),
     title: document.title,
@@ -225,6 +222,15 @@ Auth0Metrics.prototype.getData = function() {
     search: window.location.search,
     label: this.$options.label
   }
+}
+
+/**
+ * @private
+ */
+Auth0Metrics.prototype.extendData = function(data) {
+  var extended = _.assign({}, this.getData(), data || {});
+  extended.uuid = uuid();
+  return extended;
 }
 
 /**
