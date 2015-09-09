@@ -4,6 +4,7 @@
  */
 
 var debug = require('debug')('auth0-metrics');
+var uuid = require('uuid');
 var _ = require('lodash');
 
 /**
@@ -216,6 +217,7 @@ Auth0Metrics.prototype.traits = function() {
  */
 Auth0Metrics.prototype.getData = function() {
   return {
+    uuid: uuid(),
     path: window.location.pathname,
     url: window.location.toString(),
     title: document.title,
