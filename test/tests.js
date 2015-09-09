@@ -64,15 +64,14 @@ function clearData(){
 
 describe('Auth0 - Metrics', function () {
 
-
-    function testBasicData(data, expected) {
-      expect(data.path).to.be(window.location.pathname);
-      expect(data.referrer).to.be(document.referrer);
-      expect(data.title).to.be(document.title);
-      expect(data.userAgent).to.be(navigator.userAgent);
-      expect(data.url).to.be(window.location.toString());
-      expect(data.search).to.be(window.location.search);
-    }
+  function testBasicData(data, expected) {
+    expect(data.path).to.be(window.location.pathname);
+    expect(data.referrer).to.be(document.referrer);
+    expect(data.title).to.be(document.title);
+    expect(data.userAgent).to.be(navigator.userAgent);
+    expect(data.url).to.be(window.location.toString());
+    expect(data.search).to.be(window.location.search);
+  }
 
   before(function () {
     clearData();
@@ -200,8 +199,6 @@ describe('Auth0 - Metrics', function () {
 
         done();
       });
-
-
     });
 
     it('should let you alias an id', function(done) {
