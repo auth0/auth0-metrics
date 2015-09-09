@@ -78,7 +78,7 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
     segment.track.call(segment, name, _.assign({}, this.getData(), data || {}), null);
   } catch (error) {
     debug('segment analytics error: %o', error);
-    this._trackSegmentError(error);
+    this._trackSegmentError('track', error);
   }
 
   //DWH
@@ -134,7 +134,7 @@ Auth0Metrics.prototype.identify = function (id, traits, callback) {
       segment.identify.apply(segment, args);
     } catch (error) {
       debug('segment analytics error: %o', error);
-      this._trackSegmentError(error);
+      this._trackSegmentError('identify', error);
     }
 
   }else{
@@ -167,7 +167,7 @@ Auth0Metrics.prototype.alias = function (userId, callback) {
     segment.alias.apply(segment, arguments);
   } catch (error) {
     debug('segment analytics error: %o', error);
-    this._trackSegmentError(error);
+    this._trackSegmentError('alias', error);
   }
 
   //DWH
@@ -193,7 +193,7 @@ Auth0Metrics.prototype.page = function (callback) {
     segment.page.apply(segment, arguments);
   } catch (error) {
     debug('segment analytics error: %o', error);
-    this._trackSegmentError(error);
+    this._trackSegmentError('page', error);
   }
 
   //DWH
@@ -256,13 +256,13 @@ Auth0Metrics.prototype.ready = function (cb) {
   }
 }
 
-Auth0Metrics.prototype._trackSegmentError = function(error) {
+Auth0Metrics.prototype._trackSegmentError = function(action, error) {
   try {
-    this.dwh.track('segment-error', {
+    this.dwh.track('segment:fail:' + action, {
       messsage: error.message,
       stack: error.stack
     });
-  } catch (error) {
-    debug('dwh analytics error: %o', error);
+  } catch (e) {
+    debug('dwh analytics error: %o', e);
   }
 }
