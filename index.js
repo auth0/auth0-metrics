@@ -180,8 +180,9 @@ Auth0Metrics.prototype.alias = function (userId, callback) {
 /**
  * @public
  */
-Auth0Metrics.prototype.page = function (callback) {
+Auth0Metrics.prototype.page = function () {
   var segment = this.segment();
+  var args = this.extendPageArguments(arguments);
 
   if (!segment.loaded) {
     debug('track call without segment');
@@ -189,7 +190,7 @@ Auth0Metrics.prototype.page = function (callback) {
 
   //Segment
   try {
-    segment.page.apply(segment, arguments);
+    segment.page.apply(segment, args);
   } catch (error) {
     debug('segment analytics error: %o', error);
     this._trackSegmentError('page', error);
@@ -197,7 +198,7 @@ Auth0Metrics.prototype.page = function (callback) {
 
   //DWH
   try {
-    this.dwh.page(callback);
+    this.dwh.page.apply(this.dwh, args);
   } catch (error) {
     debug('dwh analytics error: %o', error);
   }
@@ -231,6 +232,30 @@ Auth0Metrics.prototype.extendData = function(data) {
   var extended = _.assign({}, this.getData(), data || {});
   extended.uuid = uuid();
   return extended;
+}
+
+/**
+ * @private
+ */
+Auth0Metrics.prototype.extendPageArguments = function(args) {
+  var base = { uuid: uuid() };
+  args = Array.prototype.concat.apply([], args);
+
+  if (!args.length) {
+    return args.push(base), args;
+  }
+
+  for (var i = 0; i < args.length; i++) {
+    if (_.isObject(args[i])) {
+      return _.assign(args[i], base), args;
+    }
+  }
+
+  ('string' === typeof args[0])
+    ? args.splice(1, 0, base)
+    : args.unshift(base);
+
+  return args;
 }
 
 /**

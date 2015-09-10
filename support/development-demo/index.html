@@ -136,6 +136,14 @@
 
           $('#pageview-button').on('click', function() {
             metrics.page();
+            metrics.page('PI');
+            metrics.page('Pricing', {something: 'here'});
+            metrics.page({url: 'https://asdasd.com', something: 'else'});
+            function here () {console.log('here')};
+            metrics.page(here);
+            metrics.page('PI', here);
+            metrics.page('Pricing', {something: 'here'}, here);
+            metrics.page({url: 'https://asdasd.com', something: 'else'}, here);
           });
 
           $('#track-button').on('click', function() {
