@@ -6,6 +6,10 @@ mocha.timeout(60000);
 mocha.globals(['jQuery*', 'analytics', 'GoogleAnalyticsObject', 'ga', 'mixpanel', 'gaplugins', 'gaGlobal']);
 
 
+var responses = {
+  successJSON: [ 200, { "Content-Type": "application/json" }, '{}' ]
+};
+
 var DWH_URL = "//testurl/dwh-metrics";
 
 function levelsUrl(url){
@@ -102,8 +106,91 @@ describe('Auth0 - Metrics', function () {
     });
   });
 
+  describe('.page()', function () {
+    beforeEach(function () {
+      clearData();
+      var fServer = this.server = sinon.fakeServer.create();
+      this.server.respondImmediately = true;
+      this.server.respondWith("POST", DWH_URL, responses.successJSON);
+      this.lastReq = function() {
+        return fServer.requests[fServer.requests.length-1];
+      }
+    });
 
+    afterEach(function () {
+      this.server.restore();
+    });
 
+    it('should work', function(done) {
+      var _this = this;
+      this.metrics.page(function () {
+        var requestData = parseRequestBody(_this.lastReq());
+        var type = requestData.type;
+        var data = requestData.data;
+        testBasicData(data);
+
+        expect(type).to.be('page');
+        expect(data.label).to.be('testing');
+        expect(data.storageType).to.be('cookie');
+        expect(data.properties.uuid).to.be.ok();
+
+        done();
+      });
+    });
+
+    it('should work with page title', function(done) {
+      var _this = this;
+      this.metrics.page('some title', function () {
+        var requestData = parseRequestBody(_this.lastReq());
+        var type = requestData.type;
+        var data = requestData.data;
+
+        testBasicData(data);
+        expect(type).to.be('page');
+        expect(data.label).to.be('testing');
+        expect(data.storageType).to.be('cookie');
+        expect(data.properties.uuid).to.be.ok();
+
+        done();
+      });
+    });
+
+    it('should work with page title and params', function(done) {
+      var _this = this;
+      this.metrics.page('some title', { some: 'param' }, function () {
+        var requestData = parseRequestBody(_this.lastReq());
+        var type = requestData.type;
+        var data = requestData.data;
+
+        testBasicData(data);
+        expect(type).to.be('page');
+        expect(data.label).to.be('testing');
+        expect(data.storageType).to.be('cookie');
+        expect(data.properties.uuid).to.be.ok();
+        expect(data.properties.some).to.be('param');
+
+        done();
+      });
+    });
+
+    it('should work with params', function(done) {
+      var _this = this;
+      this.metrics.page({ another: 'param' }, function () {
+        var requestData = parseRequestBody(_this.lastReq());
+        var type = requestData.type;
+        var data = requestData.data;
+
+        testBasicData(data);
+        expect(type).to.be('page');
+        expect(data.label).to.be('testing');
+        expect(data.storageType).to.be('cookie');
+        expect(data.properties.uuid).to.be.ok();
+        expect(data.properties.another).to.be('param');
+
+        done();
+      });
+    });
+  });
 
   describe('normal page track flow', function() {
     before(function() {
@@ -115,9 +202,7 @@ describe('Auth0 - Metrics', function () {
       var ctx = this;
       this.server = sinon.fakeServer.create();
       this.server.respondImmediately = true;
-      this.server.respondWith("POST", DWH_URL,
-            [200, { "Content-Type": "application/json" },
-             '{}'])
+      this.server.respondWith("POST", DWH_URL, responses.successJSON)
       this.lastReq = function(){
         return ctx.server.requests[ctx.server.requests.length-1];
       }
@@ -261,156 +346,156 @@ describe('Auth0 - Metrics', function () {
 
 
 
-    describe('normal page track flow without segment', function() {
-      var segmentSave;
-      before(function() {
-        clearData();
-        segmentSave = this.metrics._segment;
+  describe('normal page track flow without segment', function() {
+    var segmentSave;
+    before(function() {
+      clearData();
+      segmentSave = this.metrics._segment;
 
-        var analytics = [];
+      var analytics = [];
 
-        analytics.invoked = true;
+      analytics.invoked = true;
 
-        // A list of the methods in Analytics.js to stub.
-        analytics.methods = [
-          'trackSubmit',
-          'trackClick',
-          'trackLink',
-          'trackForm',
-          'pageview',
-          'identify',
-          'group',
-          'track',
-          'ready',
-          'alias',
-          'page',
-          'once',
-          'off',
-          'on'
-        ];
+      // A list of the methods in Analytics.js to stub.
+      analytics.methods = [
+        'trackSubmit',
+        'trackClick',
+        'trackLink',
+        'trackForm',
+        'pageview',
+        'identify',
+        'group',
+        'track',
+        'ready',
+        'alias',
+        'page',
+        'once',
+        'off',
+        'on'
+      ];
 
-        analytics.factory = function(method){
-          return function(){
-            var args = Array.prototype.slice.call(arguments);
-            args.unshift(method);
-            analytics.push(args);
-            return analytics;
-          };
+      analytics.factory = function(method){
+        return function(){
+          var args = Array.prototype.slice.call(arguments);
+          args.unshift(method);
+          analytics.push(args);
+          return analytics;
         };
+      };
 
-        for (var i = 0; i < analytics.methods.length; i++) {
-          var key = analytics.methods[i];
-          analytics[key] = analytics.factory(key);
-        }
+      for (var i = 0; i < analytics.methods.length; i++) {
+        var key = analytics.methods[i];
+        analytics[key] = analytics.factory(key);
+      }
 
-        analytics.SNIPPET_VERSION = '3.0.1';
+      analytics.SNIPPET_VERSION = '3.0.1';
 
-        this.metrics._segment = analytics;
+      this.metrics._segment = analytics;
 
-        this.anon_id = readCookie('ajs_anonymous_id');
-        var fServer = this.server = sinon.fakeServer.create();
-        this.server.respondImmediately = true;
-        this.server.respondWith("POST", DWH_URL,
-              [200, { "Content-Type": "application/json" },
-               '{}'])
-        this.lastReq = function(){
-          return fServer.requests[fServer.requests.length-1];
-        }
-
-      });
-
-      after(function () {
-        this.server.restore();
-        this.metrics._segment = segmentSave;
-        this.anon_id = null;
-      });
-
-
-
-          it('should track the current page', function (done) {
-            var ctx = this;
-            this.metrics.page(function(){
-              var requestData = parseRequestBody(ctx.lastReq());
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('page');
-              expect(data.storageType).to.be('cookie');
-
-              ctx.anon_id = readCookie('ajs_anonymous_id');
-              expect(ctx.anon_id).to.be.a('string');
-
-              done();
-            });
-          });
-
-          it('should let you track as user id 1', function(done) {
-            var ctx = this;
-            var traits = {
-              name: "user1",
-              nickname: '',
-              created_at: '',
-              email: 'user1@auth0.com',
-              email_verified: true,
-              loginsCount: 4,
-              tenant: 'usertenant1',
-              tenants: 'usertenant1'
-            };
-
-            this.metrics.identify("1", traits, function(){
-              var requestData = parseRequestBody(ctx.lastReq());
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('identify');
-              expect(data.storageType).to.be('cookie');
-              expect(data.userId).to.be("1");
-              expect(JSON.stringify(data.traits)).to.be(JSON.stringify(traits));
-              expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
-
-              done();
-            });
-
-          });
-
-          it('should let you track a testing event', function(done) {
-            var ctx = this;
-            this.metrics.track("testevent", {'testing': 5}, function(){
-              var requestData = parseRequestBody(ctx.lastReq());
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('track');
-              expect(data.storageType).to.be('cookie');
-              expect(data.userId).to.be("1");
-              expect(data.event).to.be('testevent');
-              expect(data.properties.testing).to.be(5);
-              expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
-
-              done();
-            });
-
-
-          });
-
-          it('should let you alias an id', function(done) {
-            var ctx = this;
-            this.metrics.alias("2", function(){
-              var requestData = parseRequestBody(ctx.lastReq());
-              var data = requestData.data;
-              testBasicData(data);
-              expect(data.label).to.be('testing');
-              expect(requestData.type).to.be('alias');
-              expect(data.storageType).to.be('cookie');
-              expect(data.userId).to.be("2");
-              expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
-
-              done();
-            });
-
-          });
+      this.anon_id = readCookie('ajs_anonymous_id');
+      var fServer = this.server = sinon.fakeServer.create();
+      this.server.respondImmediately = true;
+      this.server.respondWith("POST", DWH_URL,
+            [200, { "Content-Type": "application/json" },
+             '{}'])
+      this.lastReq = function(){
+        return fServer.requests[fServer.requests.length-1];
+      }
 
     });
+
+    after(function () {
+      this.server.restore();
+      this.metrics._segment = segmentSave;
+      this.anon_id = null;
+    });
+
+
+
+    it('should track the current page', function (done) {
+      var ctx = this;
+      this.metrics.page(function(){
+        var requestData = parseRequestBody(ctx.lastReq());
+        var data = requestData.data;
+        testBasicData(data);
+        expect(data.label).to.be('testing');
+        expect(requestData.type).to.be('page');
+        expect(data.storageType).to.be('cookie');
+
+        ctx.anon_id = readCookie('ajs_anonymous_id');
+        expect(ctx.anon_id).to.be.a('string');
+
+        done();
+      });
+    });
+
+    it('should let you track as user id 1', function(done) {
+      var ctx = this;
+      var traits = {
+        name: "user1",
+        nickname: '',
+        created_at: '',
+        email: 'user1@auth0.com',
+        email_verified: true,
+        loginsCount: 4,
+        tenant: 'usertenant1',
+        tenants: 'usertenant1'
+      };
+
+      this.metrics.identify("1", traits, function(){
+        var requestData = parseRequestBody(ctx.lastReq());
+        var data = requestData.data;
+        testBasicData(data);
+        expect(data.label).to.be('testing');
+        expect(requestData.type).to.be('identify');
+        expect(data.storageType).to.be('cookie');
+        expect(data.userId).to.be("1");
+        expect(JSON.stringify(data.traits)).to.be(JSON.stringify(traits));
+        expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
+
+        done();
+      });
+
+    });
+
+    it('should let you track a testing event', function(done) {
+      var ctx = this;
+      this.metrics.track("testevent", {'testing': 5}, function(){
+        var requestData = parseRequestBody(ctx.lastReq());
+        var data = requestData.data;
+        testBasicData(data);
+        expect(data.label).to.be('testing');
+        expect(requestData.type).to.be('track');
+        expect(data.storageType).to.be('cookie');
+        expect(data.userId).to.be("1");
+        expect(data.event).to.be('testevent');
+        expect(data.properties.testing).to.be(5);
+        expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
+
+        done();
+      });
+
+
+    });
+
+    it('should let you alias an id', function(done) {
+      var ctx = this;
+      this.metrics.alias("2", function(){
+        var requestData = parseRequestBody(ctx.lastReq());
+        var data = requestData.data;
+        testBasicData(data);
+        expect(data.label).to.be('testing');
+        expect(requestData.type).to.be('alias');
+        expect(data.storageType).to.be('cookie');
+        expect(data.userId).to.be("2");
+        expect(readCookie('ajs_anonymous_id')).to.be(ctx.anon_id);
+
+        done();
+      });
+
+    });
+
+  });
 
   describe('identify multiple arities support', function() {
     function dwhServer() {
