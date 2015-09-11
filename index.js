@@ -124,7 +124,7 @@ Auth0Metrics.prototype.identify = function (id, traits, callback) {
 
   // Argument reshuffling.
   if (_.isFunction(traits)) callback = traits, traits = null;
-  if (_.isObject(id)) traits = id, id = null;
+  if (_.isPlainObject(id)) traits = id, id = null;
 
   var segment = this.segment();
 
@@ -246,7 +246,7 @@ Auth0Metrics.prototype.extendPageArguments = function(args) {
   }
 
   for (var i = 0; i < args.length; i++) {
-    if (_.isObject(args[i])) {
+    if (_.isPlainObject(args[i])) {
       return _.assign(args[i], base), args;
     }
   }
