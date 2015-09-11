@@ -395,13 +395,10 @@ describe('Auth0 - Metrics', function () {
       this.anon_id = readCookie('ajs_anonymous_id');
       var fServer = this.server = sinon.fakeServer.create();
       this.server.respondImmediately = true;
-      this.server.respondWith("POST", DWH_URL,
-            [200, { "Content-Type": "application/json" },
-             '{}'])
+      this.server.respondWith("POST", DWH_URL, responses.successJSON);
       this.lastReq = function(){
         return fServer.requests[fServer.requests.length-1];
       }
-
     });
 
     after(function () {
@@ -409,8 +406,6 @@ describe('Auth0 - Metrics', function () {
       this.metrics._segment = segmentSave;
       this.anon_id = null;
     });
-
-
 
     it('should track the current page', function (done) {
       var ctx = this;
