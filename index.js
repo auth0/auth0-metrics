@@ -88,6 +88,7 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
     this.dwh.track(name, extended, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
+    'function' === typeof callback && callback();
   }
 }
 
@@ -147,6 +148,7 @@ Auth0Metrics.prototype.identify = function (id, traits, callback) {
     this.dwh.identify(id, traits, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
+    'function' === typeof callback && callback();
   }
 }
 
@@ -174,6 +176,7 @@ Auth0Metrics.prototype.alias = function (userId, callback) {
     this.dwh.alias(userId, callback);
   } catch (error) {
     debug('dwh analytics error: %o', error);
+    'function' === typeof callback && callback();
   }
 }
 
