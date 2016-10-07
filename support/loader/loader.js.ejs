@@ -7,6 +7,15 @@
       var args = Array.prototype.slice.call(arguments);
       args.unshift(method);
       <%= locals.globalNamespace %>.push(args);
+      // if we have methods expecting a callback
+      // and the lib already failed to load
+      // don't block the loop
+      var lastIndex = args.length - 1;
+      var callback = typeof args[lastIndex] === 'function' && args[lastIndex];
+      var failed = <%= locals.globalNamespace %>.__state === 'failed';
+      if (failed && callback) {
+        callback();
+      }
       return <%= locals.globalNamespace %>;
     };
   };
@@ -21,9 +30,11 @@
 
     if(null != window.Auth0Metrics){
       window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
+      <%= locals.globalNamespace %>.__state = 'loaded';
       return;
     }
 
+    <%= locals.globalNamespace %>.__state = 'loading';
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
@@ -32,10 +43,12 @@
       + 'cdn.auth0.com/js/m/<%= locals.majorFileName %>.min.js';
     script.onerror = function(){
       console.error('<%= locals.loadErrorMessage %>');
+      <%= locals.globalNamespace %>.__state = 'failed';
     }
     script.onload = function(){
       // Grab analytics and make it private
       window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
+      <%= locals.globalNamespace %>.__state = 'loaded';
     }
     var first = document.getElementsByTagName('script')[0];
     first.parentNode.insertBefore(script, first);
