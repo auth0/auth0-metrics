@@ -45,6 +45,7 @@
             <ul>
               <li><a id="pageview-button"><i></i>Pageview</a></li>
               <li><a id="track-button"><i></i>Track event</a></li>
+              <li><a id="track-signup-button"><i></i>Track signup</a></li>
               <li><a id="identify1-button"><i></i>Identify user 1</a></li>
               <li><a id="identify2-button"><i></i>Identify user 2</a></li>
               <li><a id="abtest-button"><i></i>A/B test</a></li>
@@ -148,6 +149,10 @@
 
           $('#track-button').on('click', function() {
             metrics.track('success:test', {"testing": true, test: [1,2,3,4]}, function(){console.log('Track callback');});
+          });
+
+          $('#track-signup-button').on('click', function() {
+            metrics.track('success:signup', {category: "Management", "testing": true, test: [1,2,3,4]}, function(){console.log('Track callback');});
           });
 
           $('#identify1-button').on('click', function() {

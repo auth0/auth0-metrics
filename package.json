@@ -22,6 +22,7 @@
   "author": "Auth0 <support@auth0.com> (http://auth0.com)",
   "license": "MIT",
   "dependencies": {
+    "auth0-metrics-tag-manager": "github:auth0/auth0-metrics-tag-manager#1.0.3",
     "component-cookie": "^1.1.2",
     "component-url": "^0.2.1",
     "debug": "^2.1.2",
