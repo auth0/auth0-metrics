@@ -3,7 +3,7 @@
  */
 
 mocha.timeout(60000);
-mocha.globals(['jQuery*', 'analytics', 'GoogleAnalyticsObject', 'ga', 'mixpanel', 'gaplugins', 'gaGlobal']);
+mocha.globals(['jQuery*', 'analytics', 'GoogleAnalyticsObject', 'ga', 'mixpanel', 'gaplugins', 'gaGlobal', 'gaData', 'fbq', '_fbq', 'twq', 'google_trackConversion', 'twttr']);
 
 
 var responses = {

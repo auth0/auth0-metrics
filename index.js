@@ -46,7 +46,7 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
 
   debug("Loading segment...");
 
-  require('./lib/boot-segment')(segmentKey);
+  require('./lib/tag-manager')(label);
 
 
 }
