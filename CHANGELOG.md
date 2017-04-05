@@ -1,3 +1,26 @@
+## [1.4.2] - 2015-09-11
+
+### Fixed
+
+- [] Merge pull request #16 from auth0/no-segment (`Alejo Fernandez`)
+  https://github.com/auth0/metrics/commit/c10eaf5d50d629898a6ad458ae2dbc5202e38307
+- [] Replace segment with a custom made tag manager (`Alejo Fernandez`)
+  https://github.com/auth0/metrics/commit/6286cc093f7209830da14a4d6a17f640de3683b1
+- [] Release: 1.4.1 (`Cristian Douce`)
+  https://github.com/auth0/metrics/commit/6690fe1fcd490c549253464ebab747a27b6bbf65
+- [] Merge pull request #13 from auth0/fix/callback-not-called (`Cristian Douce`)
+  https://github.com/auth0/metrics/commit/293f794a692a67f12a1dc6465d28f424d803e0b5
+- [] Update index.js (`Cristian Douce`)
+  https://github.com/auth0/metrics/commit/6fb7e06414912841233c191d34ae542b5596e78b
+- [] Merge pull request #11 from Annyv2/license (`Nathan Totten`)
+  https://github.com/auth0/metrics/commit/9f8a3049f29c042d04af84799b5754419769c9ac
+- [] Update package.json (`Cristian Douce`)
+  https://github.com/auth0/metrics/commit/afee19e76848b1817f5c4b38bdaddf2aa7942dbd
+- [] Update README.md (`Annyv2`)
+  https://github.com/auth0/metrics/commit/19203b5c91cc11fdd14003415631e1d8b9604e52
+- [] Create LICENSE (`Annyv2`)
+  https://github.com/auth0/metrics/commit/c004d1d36fde45b8fe49bdbdde8e46068c8ac84a
+
 ## [1.4.1] - 2015-08-14
 
 ### Fixed
