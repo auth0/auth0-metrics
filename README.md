@@ -21,7 +21,7 @@ To build and run the library locally, you can run
 Using our CDN is the preferred solution. Just add the following line in your project's HTML head and you are done.
 
 ```html
-<script src="https://cdn.auth0.com/js/metrics/1.4.4/metrics.min.js"></script>
+<script src="https://cdn.auth0.com/js/metrics/1.4.4/auth0-metrics.min.js"></script>
 ```
 
 Then you have to call the constructor with the correct dev/prod variables
