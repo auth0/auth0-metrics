@@ -15,22 +15,20 @@ To build and run the library locally, you can run
 `npm run dev`, that will let you include the library from http://localhost:9999/auth0-metrics.js, you can also test the methods included in http://localhost:9999/
 
 ## Usage (deploy)
-To use it, you have to include the script which has been built, it is built with major, minor and fix versions to be able to granularly specify versioning. You can include either the complete or minified version.
 
-For example, for version 1.3.7, the following files will be built:
+### CDN
 
-```
-metrics-1.js
-metrics-1.3.js
-metrics-1.3.7.js
-metrics-1.min.js
-metrics-1.3.min.js
-metrics-1.3.7.min.js
+Using our CDN is the preferred solution. Just add the following line in your project's HTML head and you are done.
+
+```html
+<script src="https://cdn.auth0.com/js/metrics/1.4.4/metrics.min.js"></script>
 ```
 
 Then you have to call the constructor with the correct dev/prod variables
 
-`var metrics = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');`
+```javascript
+var metrics = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');
+```
 
 ### Loader
 
