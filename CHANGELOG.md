@@ -1,3 +1,16 @@
+## [1.4.4] - 2017-05-10
+
+### Fixed
+
+- [] Update zuul-ngrok (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/ae812f66486067307fc9f3b3284e654dd8a23d76
+- [] Update cdn release process (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/2fa952822fee4c6eb1b03b90012a5a4be65ba0b1
+- [] Merge pull request #17 from auth0/jstrutz-patch-1 (`Alejo Fernandez`)
+  https://github.com/auth0/metrics/commit/2b42fcc540b41a6f8679a53c7ca704418ba5afc1
+- [] Correct release date of v1.4.3 in CHANGELOG (`Jason Strutz`)
+  https://github.com/auth0/metrics/commit/29b3c44463b8a41d4cfcc4ea7917eca369e64847
+
 ## [1.4.3] - 2017-04-25
 
 ### Fixed
@@ -746,6 +759,3 @@
 ## [1.0.0] - 2015-08-11
 
 ### Fixed
-
-
-
