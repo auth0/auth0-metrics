@@ -1,3 +1,14 @@
+## [1.4.5] - 2017-05-11
+
+### Fixed
+
+- [] Merge pull request #20 from mike-casas/strange-anon_id (`Miguel Casas`)
+  https://github.com/auth0/metrics/commit/91d271b84c76ff20104ba2f7f042dde543e01ad9
+- [] fix Strange anon_ids on memory (`Miguel`)
+  https://github.com/auth0/metrics/commit/96a218cc2b97b8418724113d3b2370a31e8e9daf
+- [] Fix cdn file name (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/3e0cfdde70b631da49be98922df3d423448b6cf67
+
 ## [1.4.4] - 2017-05-10
 
 ### Fixed
