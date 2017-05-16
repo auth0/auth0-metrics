@@ -1,6 +1,6 @@
 {
   "name": "auth0-metrics",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "Auth0 Metrics",
   "main": "./index.js",
   "keywords": [

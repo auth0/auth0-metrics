@@ -1,3 +1,10 @@
+## [1.4.8] - 2017-05-16
+
+### Fixed
+
+- [] Change script to load  to metrics bundle (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/bb522bb97e0e59fd9cfba7c6945f5bef15258a96
+
 ## [1.4.7] - 2017-05-16
 
 ### Fixed
