@@ -2,8 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var pkg = require('./package');
 
-var major_version = pkg.version.replace(/\.(\d)*\.(\d)*$/, '');
-
 function node_bin (bin) {
   return path.join('node_modules', '.bin', bin);
 }
@@ -128,7 +126,7 @@ module.exports = function (grunt) {
         options: {
           destination: 'build',
           template : "support/loader",
-          query: "majorFileName=metrics-" + major_version
+          query: "version=" + pkg.version
         }
       }
     }

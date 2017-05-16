@@ -29,7 +29,7 @@
     script.async = true;
     script.src = ('https:' === document.location.protocol
       ? 'https://' : 'http://')
-      + 'cdn.auth0.com/js/m/<%= locals.majorFileName %>.min.js';
+      + 'cdn.auth0.com/js/m/<%= locals.version %>/auth0-metrics-loader.min.js';
     script.onerror = function(){
       console.error('<%= locals.loadErrorMessage %>');
     }
