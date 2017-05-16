@@ -31,7 +31,7 @@ exports.publish = function(data, opts) {
   var rendered = ejs.renderFile('./support/loader/loader.js.ejs', {
     globalNamespace: "metricsLib",
     loadErrorMessage: "metricsLib couldn't be loaded.",
-    majorFileName: env.opts.query.majorFileName,
+    version: env.opts.query.version,
     methods: JSON.stringify(methods)
   }, function(err, str) {
     if (err) {
