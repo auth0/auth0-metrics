@@ -1,3 +1,10 @@
+## [1.4.6] - 2017-05-16
+
+### Fixed
+
+- [] Fix loader and go back to m path in cdn (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/a5dfb4d89c61f5c0693f24f444c9eb553f779cdc
+
 ## [1.4.5] - 2017-05-11
 
 ### Fixed
