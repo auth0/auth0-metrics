@@ -1,3 +1,10 @@
+## [1.4.7] - 2017-05-16
+
+### Fixed
+
+- [] Inject version in loader .ejs and update cdn link to next version (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/9ab75c1c730ac3f5d266e1a58f4f68c005f357e9
+
 ## [1.4.6] - 2017-05-16
 
 ### Fixed
