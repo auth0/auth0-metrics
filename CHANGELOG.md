@@ -1,3 +1,10 @@
+## [1.5.0] - 2017-05-16
+
+### Fixed
+
+- [] Add onReady callback to loader (`Ramiro Silveyra d'Avila`)
+  https://github.com/auth0/metrics/commit/ea3f426d606327d2042c90bd937dd3eaf1986e69
+
 ## [1.4.8] - 2017-05-16
 
 ### Fixed
