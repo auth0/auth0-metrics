@@ -21,6 +21,7 @@
 
     if(null != window.Auth0Metrics){
       window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
+      if (config.onReady) window.<%= locals.globalNamespace %>.ready(config.onReady);
       return;
     }
 
@@ -36,6 +37,7 @@
     script.onload = function(){
       // Grab analytics and make it private
       window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
+      if (config.onReady) window.<%= locals.globalNamespace %>.ready(config.onReady);
     }
     var first = document.getElementsByTagName('script')[0];
     first.parentNode.insertBefore(script, first);
