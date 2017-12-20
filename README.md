@@ -1,6 +1,6 @@
 # auth0-metrics
 
-This library provides a module to track all frontend usage on auth0.com, it wraps Segment and sends the same data both to segment and our own endpoint.
+This library provides a module to track all frontend usage on auth0.com, it wraps Segment and sends the same data both to segment and our own endpoint. When defining new metrics, please revise the methodology at [the data playbook](https://reports.it.auth0.com/reports/data-playbook/data-collection.html#frontend-tracking).
 
 ## Installation
 
