@@ -61,7 +61,7 @@
     "rimraf": "~2.2.2",
     "sinon": "1.16.0",
     "through": "^2.3.4",
-    "uglify-js": "~2.4.15",
+    "uglify-js": "~2.6.0",
     "unreleased": "^0.0.5",
     "zuul": "^3.4.0",
     "zuul-ngrok": "4.0.0"
