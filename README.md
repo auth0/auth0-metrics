@@ -27,8 +27,37 @@ Using our CDN is the preferred solution. Just add the following line in your pro
 Then you have to call the constructor with the correct dev/prod variables
 
 ```javascript
-var metrics = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');
+var metrics = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website', {});
 ```
+
+#### Options {}
+
+Additional configuration options can be specified by passing an options object to the constructor.  Metrics library will iterate over the object and add each property to the internal configuration options.
+
+Available options:
+
+##### removeQueryParam []{}
+
+Allows stripping of query parameters from the window URL.  This is useful in cases where URL contains JWT tokens or other information that should not be recorded.  Each query parameter that needs to be removed can be specified with an object that contains a key (`string`) and a value (`RegEx string`) property.
+
+```js
+{
+  removeQueryParam: [
+    {
+      key: 'token',
+      value: '[a-z0-9\._~-]+'
+    }
+  ]
+}
+```
+
+The following url
+
+`http://localhost:3000/#token=xxxx.yyyy.zzzz&webtaskName=test`
+
+will be transformed to
+
+`http://localhost:3000/#&webtaskName=test`
 
 ### Loader
 
@@ -40,7 +69,8 @@ A script that will asynchronously load `auth0-metrics.js` is also provided.
   metricsLib.load({
     segmentKey: 'segmentKey',
     dwhEndpoint: 'dwhEndpoint',
-    label: 'website'
+    label: 'website',
+    options: {}
   });
 </script>
 ```
@@ -64,7 +94,8 @@ Using the loader may also be desired when loading `auth0-metrics.js` synchronous
   metricsLib.load({
     segmentKey: 'segmentKey',
     dwhEndpoint: 'dwhEndpoint',
-    label: 'website'
+    label: 'website',
+    options: {}
   });
 </script>
 ```
@@ -74,7 +105,7 @@ Contrast the previous snippet with the following that instantiates `Auth0Metrics
 ```html
 <script src="auth0-metrics.js"></script>
 <script>
-  var metricsLib = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website');
+  var metricsLib = new Auth0Metrics('segmentKey', 'dwhEndpoint', 'website', {});
 </script>
 ```
 

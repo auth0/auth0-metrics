@@ -601,6 +601,46 @@ describe('Auth0 - Metrics', function () {
   });
 });
 
+describe('Auth0 - Metrics with options object', function () {
+
+  function testBasicData(data, expected) {
+
+    
+    expect(data.search).to.be(window.location.search);
+  }
+
+  before(function () {
+    clearData();
+    this.metrics = new Auth0Metrics(
+      '', 
+      'http://localhost:3000/#webtaskName=test&token=xxx.yyyy.zzzz&debug=true', 
+      'testing',
+      { 
+        removeQueryParam: [
+          {
+            key: 'token',
+            value: '[a-z0-9\._~-]+'
+          }
+        ] 
+      }
+    );
+    sinon.xhr.supportsCORS = true;
+  });
+
+  it('should let you track an event without token in the url', function(done) {
+    var ctx = this;
+    this.metrics.track("testevent", {}, function(){
+      var requestData = parseRequestBody(ctx.lastReq());
+      var data = requestData.data;
+
+      expect(data.url).to.be('http://localhost:3000/#webtaskName=test&debug=true');
+
+      done();
+    });
+  });
+
+});
+
 function parseRequestBody(request) {
   if (!request || 'string' !== typeof request.requestBody) {
     return request;
