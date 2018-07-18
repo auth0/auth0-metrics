@@ -83,14 +83,6 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
     debug('track call without segment');
   }
 
-  // strip out query paramters from the url
-  if (extended && extended.url && this.$options.removeQueryParam && this.$options.removeQueryParam.length > 0) {
-    for (var i = 0; i < this.$options.removeQueryParam.length; i++){
-      var regExp = new RegExp('&*' + this.$options.removeQueryParam[i].key + '=' + this.$options.removeQueryParam[i].value, 'gmi');
-      extended.url = extended.url.replace(regExp, '');
-    }
-  }
-
   //Segment
   try {
     segment.track.call(segment, name, extended, null);
@@ -236,12 +228,30 @@ Auth0Metrics.prototype.traits = function() {
 Auth0Metrics.prototype.getData = function() {
   return {
     path: window.location.pathname,
-    url: window.location.toString(),
+    url: this.removeQueryParams(window.location.toString()),
     title: document.title,
     referrer: document.referrer,
     search: window.location.search,
     label: this.$options.label
   }
+}
+
+/**
+ * Strip out selected query paramters from the url
+ * 
+ * @param {String} url 
+ * @return {String}
+ */
+Auth0Metrics.prototype.removeQueryParams = function(url) {
+  
+  if (url && this.$options.removeQueryParam && this.$options.removeQueryParam.length > 0) {
+    for (var i = 0; i < this.$options.removeQueryParam.length; i++){
+      var regExp = new RegExp('&*' + this.$options.removeQueryParam[i].key + '=' + this.$options.removeQueryParam[i].value, 'gmi');
+      url = url.replace(regExp, '');
+    }
+  }
+
+  return url;
 }
 
 /**
