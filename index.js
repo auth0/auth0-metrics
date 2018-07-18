@@ -43,7 +43,7 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label, options) {
 
   // Save additional instance configuration in $options
   if (options) {
-    for (let key in options) {
+    for (var key in options) {
       if (options.hasOwnProperty(key)) {
           this.$options[key] = options[key];
       }
@@ -85,8 +85,8 @@ Auth0Metrics.prototype.track = function(name, data, callback) {
 
   // strip out query paramters from the url
   if (extended && extended.url && this.$options.removeQueryParam && this.$options.removeQueryParam.length > 0) {
-    for (let i = 0; i < this.$options.removeQueryParam.length; i++){
-      let regExp = new RegExp('&*' + this.$options.removeQueryParam[i].key + '=' + this.$options.removeQueryParam[i].value, 'gmi');
+    for (var i = 0; i < this.$options.removeQueryParam.length; i++){
+      var regExp = new RegExp('&*' + this.$options.removeQueryParam[i].key + '=' + this.$options.removeQueryParam[i].value, 'gmi');
       extended.url = extended.url.replace(regExp, '');
     }
   }
