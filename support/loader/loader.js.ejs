@@ -20,7 +20,7 @@
     // TODO: validate arguments and throw an error if needed
 
     if(null != window.Auth0Metrics){
-      window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
+      window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label, config.options);
       if (config.onReady) window.<%= locals.globalNamespace %>.ready(config.onReady);
       return;
     }
@@ -36,7 +36,7 @@
     }
     script.onload = function(){
       // Grab analytics and make it private
-      window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label);
+      window.<%= locals.globalNamespace %> = new Auth0Metrics(config.segmentKey, config.dwhEndpoint, config.label, config.options);
       if (config.onReady) window.<%= locals.globalNamespace %>.ready(config.onReady);
     }
     var first = document.getElementsByTagName('script')[0];

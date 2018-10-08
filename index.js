@@ -19,11 +19,12 @@ module.exports = Auth0Metrics;
  * @param {String} segmentKey
  * @param {String} dwhEndpoint
  * @param {String} label
+ * @param {Object} options
  * @return {Auth0Metrics}
  * @constructor
  */
 
-function Auth0Metrics (segmentKey, dwhEndpoint, label) {
+function Auth0Metrics (segmentKey, dwhEndpoint, label, options) {
   if (!(this instanceof Auth0Metrics)) {
     return new Auth0Metrics(segmentKey, dwhEndpoint, label);
   }
@@ -40,6 +41,15 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
   this.$options.dwhEndpoint = dwhEndpoint;
   this.$options.label = label;
 
+  // Save additional instance configuration in $options
+  if (options) {
+    for (var key in options) {
+      if (options.hasOwnProperty(key)) {
+          this.$options[key] = options[key];
+      }
+    }
+  }
+
   debug("Loading DWH endpoint library...")
 
   this.dwh = require('./lib/dwh')(dwhEndpoint, label);
@@ -47,8 +57,6 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label) {
   debug("Loading segment...");
 
   require('./lib/tag-manager')(label);
-
-
 }
 
 /**
@@ -220,12 +228,30 @@ Auth0Metrics.prototype.traits = function() {
 Auth0Metrics.prototype.getData = function() {
   return {
     path: window.location.pathname,
-    url: window.location.toString(),
+    url: this.removeQueryParams(window.location.toString()),
     title: document.title,
     referrer: document.referrer,
     search: window.location.search,
     label: this.$options.label
   }
+}
+
+/**
+ * Strip out selected query paramters from the url
+ * 
+ * @param {String} url 
+ * @return {String}
+ */
+Auth0Metrics.prototype.removeQueryParams = function(url) {
+  
+  if (url && this.$options.removeQueryParam && this.$options.removeQueryParam.length > 0) {
+    for (var i = 0; i < this.$options.removeQueryParam.length; i++){
+      var regExp = new RegExp('&*' + this.$options.removeQueryParam[i].key + '=' + this.$options.removeQueryParam[i].value, 'gmi');
+      url = url.replace(regExp, '');
+    }
+  }
+
+  return url;
 }
 
 /**
