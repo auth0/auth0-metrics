@@ -21,7 +21,7 @@ To build and run the library locally, you can run
 Using our CDN is the preferred solution. Just add the following line in your project's HTML head and you are done.
 
 ```html
-<script src="https://cdn.auth0.com/js/m/1.5.0/auth0-metrics.min.js"></script>
+<script src="https://cdn.auth0.com/website/js/1.6.0/auth0-metrics-min.js"></script>
 ```
 
 Then you have to call the constructor with the correct dev/prod variables
@@ -36,7 +36,7 @@ Additional configuration options can be specified by passing an options object t
 
 Available options:
 
-##### removeQueryParam []{}
+##### removeQueryParam []{} (available in v1.6.0)
 
 Allows stripping of query parameters from the window URL.  This is useful in cases where URL contains JWT tokens or other information that should not be recorded.  Each query parameter that needs to be removed can be specified with an object that contains a key (`string`) and a value (`RegEx string`) property.
 
