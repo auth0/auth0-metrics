@@ -613,7 +613,7 @@ describe('Auth0 - Metrics with options object', function () {
     clearData();
     this.metrics = new Auth0Metrics(
       '', 
-      'http://localhost:3000/#webtaskName=test&token=xxx.yyyy.zzzz&debug=true', 
+      'http://localhost:3000/?webtaskName=test&token=xxx.yyyy.zzzz&debug=true', 
       'testing',
       { 
         removeQueryParam: [
@@ -633,7 +633,19 @@ describe('Auth0 - Metrics with options object', function () {
       var requestData = parseRequestBody(ctx.lastReq());
       var data = requestData.data;
 
-      expect(data.url).to.be('http://localhost:3000/#webtaskName=test&debug=true');
+      expect(data.url).to.be('http://localhost:3000/?webtaskName=test&debug=true');
+
+      done();
+    });
+  });
+
+  it('should let you track an event without token in the search url', function(done) {
+    var ctx = this;
+    this.metrics.track("testevent", {}, function(){
+      var requestData = parseRequestBody(ctx.lastReq());
+      var data = requestData.data;
+
+      expect(data.search).to.be('?webtaskName=test&debug=true');
 
       done();
     });
