@@ -231,7 +231,7 @@ Auth0Metrics.prototype.getData = function() {
     url: this.removeQueryParams(window.location.toString()),
     title: document.title,
     referrer: document.referrer,
-    search: window.location.search,
+    search: this.removeQueryParams(window.location.search),
     label: this.$options.label
   }
 }
