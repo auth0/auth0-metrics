@@ -24,3 +24,5 @@ build/auth0-lock-*.js.map
 build
 
 .idea
+
+.DS_Store
