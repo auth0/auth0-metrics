@@ -44,7 +44,7 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label, options) {
   // Save additional instance configuration in $options
   if (options) {
     for (var key in options) {
-      if (options.hasOwnProperty(key)) {
+      if (options.hasOwnProperty(key) && key !== 'tags') {
           this.$options[key] = options[key];
       }
     }
@@ -52,7 +52,7 @@ function Auth0Metrics (segmentKey, dwhEndpoint, label, options) {
 
   debug("Loading DWH endpoint library...")
 
-  this.dwh = require('./lib/dwh')(dwhEndpoint, label);
+  this.dwh = require('./lib/dwh')(dwhEndpoint, _.defaults({ label: label }, (options || {}).tags));
 
   debug("Loading segment...");
 
@@ -238,12 +238,12 @@ Auth0Metrics.prototype.getData = function() {
 
 /**
  * Strip out selected query paramters from the url
- * 
- * @param {String} url 
+ *
+ * @param {String} url
  * @return {String}
  */
 Auth0Metrics.prototype.removeQueryParams = function(url) {
-  
+
   if (url && this.$options.removeQueryParam && this.$options.removeQueryParam.length > 0) {
     for (var i = 0; i < this.$options.removeQueryParam.length; i++){
       var regExp = new RegExp('&*' + this.$options.removeQueryParam[i].key + '=' + this.$options.removeQueryParam[i].value, 'gmi');

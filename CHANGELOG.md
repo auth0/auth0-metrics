@@ -1,3 +1,20 @@
+## [2.0.0] - 2019-02-28
+
+### Fixed
+
+- [] Rollback change in version to use script (`Hernan Zalazar`)
+  https://github.com/auth0/metrics/commit/a070127ac8f39c8baaefe439e82a09f9dee5ea10
+- [] Bump version of library (`Hernan Zalazar`)
+  https://github.com/auth0/metrics/commit/9a76ce4e02f10c189822bb8f6af019531d50a4d4
+- [] Add `tags` option to send config for tags (`Hernan Zalazar`)
+  https://github.com/auth0/metrics/commit/4648473050a5c65a40f1403ac89599963d427925
+- [] Use latest auth0-tag-manager version from NPM (`Hernan Zalazar`)
+  https://github.com/auth0/metrics/commit/19c691dfc6917ec4462f13d5a5af0027568c9d30
+- [] Load jquery from CDN for tests (`Hernan Zalazar`)
+  https://github.com/auth0/metrics/commit/8bd72338cdb833119a20842c66ee67ef46132ca8
+- [] Ignore DS_Store files (`Hernan Zalazar`)
+  https://github.com/auth0/metrics/commit/895c0238fe0375d8e997f67b177599174dc16135
+
 ## [1.5.0] - 2017-05-16
 
 ### Fixed
