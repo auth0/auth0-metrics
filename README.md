@@ -21,7 +21,7 @@ To build and run the library locally, you can run
 Using our CDN is the preferred solution. Just add the following line in your project's HTML head and you are done.
 
 ```html
-<script src="https://cdn.auth0.com/website/js/1.6.0/auth0-metrics-min.js"></script>
+<script src="https://cdn.auth0.com/js/m/2.0/auth0-metrics.min.js"></script>
 ```
 
 Then you have to call the constructor with the correct dev/prod variables
@@ -61,10 +61,10 @@ will be transformed to
 
 ### Loader
 
-A script that will asynchronously load `auth0-metrics.js` is also provided.
+A script that will asynchronously load `auth0-metrics.js` is also provided and can be loaded via CDN.
 
 ```html
-<script src="auth0-metrics-loader.js"></script>
+<script src="https://cdn.auth0.com/js/m/2.0/auth0-metrics-loader.min.js"></script>
 <script>
   metricsLib.load({
     segmentKey: 'segmentKey',
